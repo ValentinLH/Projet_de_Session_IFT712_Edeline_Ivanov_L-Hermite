@@ -32,3 +32,6 @@ print("Classe prédite pour l'exemple de test :", prediction)
 # Calcul de l'erreur
 erreur = classifieur.erreur(y_test[0], prediction)
 print("Erreur de classification :", erreur)
+
+
+classifieur.afficher_donnees_et_modele(X_train, y_train,X_test,y_test)

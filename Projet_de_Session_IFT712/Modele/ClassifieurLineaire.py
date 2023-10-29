@@ -23,7 +23,7 @@ class StrategieClassification(ABC):
 
 # Classe ClassifieurLineaire avec les méthodes nécessaires pour travailler avec des stratégies de classification
 class ClassifieurLineaire:
-    def __init__(self, strategie):
+    def __init__(self, strategie : StrategieClassification):
         """
         Algorithmes de classification lineaire
 
@@ -36,6 +36,7 @@ class ClassifieurLineaire:
     def entrainement(self, x_train, t_train):
         # Utilisez la stratégie pour l'entraînement
         self.strategie.entrainer(x_train, t_train)
+        self.w_0, self.w = self.strategie.parametres()
 
     def prediction(self, x):
         # Utilisez la stratégie pour la prédiction
@@ -76,4 +77,4 @@ class ClassifieurLineaire:
         """
         Retourne les paramètres du modèle
         """
-        return self.w_0, self.w
+        return self.strategie.parametres()

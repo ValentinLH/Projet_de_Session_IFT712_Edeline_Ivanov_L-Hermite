@@ -47,3 +47,9 @@ class Perceptron(StrategieClassification):
         :return: 1 si l'erreur est commise, 0 sinon.
         """
         return 1 if t != prediction else 0
+
+    def parametres(self):
+        """
+        Retourne les paramètres du modèle
+        """
+        return self.w_0, self.w
