@@ -17,7 +17,7 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-strategie_perceptron = Perceptron(learning_rate=0.1, max_iterations=1000)
+strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
 classifieur = ClassifieurLineaire(strategie_perceptron)
 
 # Entraînez le modèle
@@ -30,5 +30,5 @@ prediction = classifieur.prediction(exemple_test)
 print("Classe prédite pour l'exemple de test :", prediction)
 
 # Calcul de l'erreur
-erreur = ClassifieurLineaire.erreur(y_test[0], prediction)
+erreur = classifieur.erreur(y_test[0], prediction)
 print("Erreur de classification :", erreur)

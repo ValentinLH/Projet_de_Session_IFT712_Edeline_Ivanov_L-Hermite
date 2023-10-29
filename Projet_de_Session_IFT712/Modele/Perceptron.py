@@ -1,8 +1,8 @@
-from sklearn.linear_model import Perceptron
+from sklearn.linear_model import Perceptron as SKlearnPerceptron
 from .ClassifieurLineaire import StrategieClassification
 
 class Perceptron(StrategieClassification):
-    def __init__(self, learning_rate=0.1, max_iterations=1000):
+    def __init__(self, learning_rate=0.01, max_iterations=1000,penalty='l2'):
         """
         Stratégie de classification utilisant le Perceptron de scikit-learn.
 
@@ -11,6 +11,7 @@ class Perceptron(StrategieClassification):
         """
         self.learning_rate = learning_rate
         self.max_iterations = max_iterations
+        self.penalty=penalty
         self.perceptron_model = None
 
     def entrainer(self, x_train, t_train):
@@ -20,7 +21,7 @@ class Perceptron(StrategieClassification):
         :param x_train: Les données d'entraînement.
         :param t_train: Les étiquettes de classe cibles.
         """
-        self.perceptron_model = Perceptron(eta0=self.learning_rate, max_iter=self.max_iterations)
+        self.perceptron_model = SKlearnPerceptron(eta0=self.learning_rate, max_iter=self.max_iterations,penalty=self.penalty)
         self.perceptron_model.fit(x_train, t_train)
         self.w = self.perceptron_model.coef_[0]
         self.w_0 = self.perceptron_model.intercept_[0]
@@ -37,8 +38,7 @@ class Perceptron(StrategieClassification):
             return self.perceptron_model.predict([x])[0]
         return 0  # Valeur par défaut si le modèle n'est pas encore entraîné
 
-    @staticmethod
-    def erreur(t, prediction):
+    def erreur(self, t, prediction):
         """
         Calcule l'erreur de classification.
 
