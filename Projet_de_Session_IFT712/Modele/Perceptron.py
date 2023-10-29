@@ -1,7 +1,7 @@
 from sklearn.linear_model import Perceptron
 from ClassifieurLineaire import StrategieClassification
 
-class StrategieClassificationPerceptronSklearn(StrategieClassification):
+class Perceptron(StrategieClassification):
     def __init__(self, learning_rate=0.1, max_iterations=1000):
         """
         Stratégie de classification utilisant le Perceptron de scikit-learn.
