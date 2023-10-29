@@ -3,17 +3,14 @@ import matplotlib.pyplot as plt
 from abc import ABC, abstractmethod
 
 # Créez une classe abstraite pour la stratégie
-class StrategieClassification:
-    
+class StrategieClassification(ABC):   
     @abstractmethod
     def entrainer(self, x_train, t_train):
         pass
 
-
     @abstractmethod
     def prediction(self, x):
         pass
-
 
     @abstractmethod
     def parametres(self):
