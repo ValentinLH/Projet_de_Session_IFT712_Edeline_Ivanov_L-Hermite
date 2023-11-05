@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
 from Modele.ClassifieurLineaire import *
 from Modele.Perceptron import *
+from Modele.RandomForest import *
 
 # Charger un jeu de données pour l'exemple (Iris dataset)
 data = load_iris()
@@ -17,8 +18,10 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
+#strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
+strategie_perceptron = RandomForest()
 classifieur = ClassifieurLineaire(strategie_perceptron)
+
 
 # Entraînez le modèle
 classifieur.entrainement(X_train, y_train)
