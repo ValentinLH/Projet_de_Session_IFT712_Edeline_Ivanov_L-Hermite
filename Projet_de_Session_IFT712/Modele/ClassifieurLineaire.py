@@ -1,5 +1,3 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from abc import ABC, abstractmethod
 
 # Créez une classe abstraite pour la stratégie
@@ -18,6 +16,10 @@ class StrategieClassification(ABC):
 
     @abstractmethod
     def erreur(self,t, prediction):
+        pass
+    
+    @abstractmethod
+    def afficher(self, x_train, t_train, x_test, t_test):
         pass
     
 
@@ -53,25 +55,7 @@ class ClassifieurLineaire:
         x_train, t_train : donnees d'entrainement
         x_test, t_test : donnees de test
         """
-        plt.figure(0)
-        plt.scatter(x_train[:, 0], x_train[:, 1], s=t_train * 100 + 20, c=t_train)
-
-        pente = -self.w[0] / self.w[1]
-        xx = np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2)
-        yy = pente * xx - self.w_0 / self.w[1]
-        plt.plot(xx, yy)
-        plt.title('Training data')
-
-        plt.figure(1)
-        plt.scatter(x_test[:, 0], x_test[:, 1], s=t_test * 100 + 20, c=t_test)
-
-        pente = -self.w[0] / self.w[1]
-        xx = np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2)
-        yy = pente * xx - self.w_0 / self.w[1]
-        plt.plot(xx, yy)
-        plt.title('Testing data')
-
-        plt.show()
+        self.strategie.afficher(x_train, t_train, x_test, t_test)
 
     def parametres(self):
         """

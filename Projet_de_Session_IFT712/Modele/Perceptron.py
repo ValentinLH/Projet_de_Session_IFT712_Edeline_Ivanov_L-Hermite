@@ -1,5 +1,7 @@
 from sklearn.linear_model import Perceptron as SKlearnPerceptron
 from .ClassifieurLineaire import StrategieClassification
+import numpy as np
+import matplotlib.pyplot as plt
 
 class Perceptron(StrategieClassification):
     def __init__(self, learning_rate=0.01, max_iterations=1000,penalty='l2'):
@@ -53,3 +55,24 @@ class Perceptron(StrategieClassification):
         Retourne les paramètres du modèle
         """
         return self.w_0, self.w
+    
+    def afficher(self, x_train, t_train, x_test, t_test):
+        plt.figure(0)
+        plt.scatter(x_train[:, 0], x_train[:, 1], s=t_train * 100 + 20, c=t_train)
+
+        pente = -self.w[0] / self.w[1]
+        xx = np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2)
+        yy = pente * xx - self.w_0 / self.w[1]
+        plt.plot(xx, yy)
+        plt.title('Training data')
+
+        plt.figure(1)
+        plt.scatter(x_test[:, 0], x_test[:, 1], s=t_test * 100 + 20, c=t_test)
+
+        pente = -self.w[0] / self.w[1]
+        xx = np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2)
+        yy = pente * xx - self.w_0 / self.w[1]
+        plt.plot(xx, yy)
+        plt.title('Testing data')
+
+        plt.show()
