@@ -31,14 +31,11 @@ class ClassifieurLineaire:
 
         La classe prend  une instance de la stratégie de classification.
         """
-        self.w = None
-        self.w_0 = None
         self.strategie = strategie
 
     def entrainement(self, x_train, t_train):
         # Utilisez la stratégie pour l'entraînement
         self.strategie.entrainer(x_train, t_train)
-        self.w_0, self.w = self.strategie.parametres()
 
     def prediction(self, x):
         # Utilisez la stratégie pour la prédiction
