@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
 from Modele.ClassifieurLineaire import *
 from Modele.Perceptron import *
+from Modele.SVM import *
 
 # Charger un jeu de données pour l'exemple (Iris dataset)
 data = load_iris()
@@ -19,6 +20,9 @@ X_test = scaler.transform(X_test)
 
 strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
 classifieur = ClassifieurLineaire(strategie_perceptron)
+
+'''strategie_SVM = SVM(kernel='linear', C=1.0)
+classifieur = ClassifieurLineaire(strategie_SVM)'''
 
 # Entraînez le modèle
 classifieur.entrainement(X_train, y_train)
