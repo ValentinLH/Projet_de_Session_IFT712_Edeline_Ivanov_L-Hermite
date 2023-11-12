@@ -17,3 +17,4 @@ class TrainData :
         self.leafClass = leaf_data["species"].values
         self.idLeaf = leaf_data["id"].values
         self.data = leaf_data.values[:,2:]
+
