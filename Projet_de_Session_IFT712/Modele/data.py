@@ -1,9 +1,9 @@
 import pandas as pd
 class TrainData :
     def __init__(self,filedata):
-        self.leafClass
-        self.data
-        self.idLeaf
+        self.leafClass = None
+        self.data = None
+        self.idLeaf = None
         self.filedata = filedata
 
         self.readData(self.filedata)
@@ -17,3 +17,4 @@ class TrainData :
         self.leafClass = leaf_data["species"].values
         self.idLeaf = leaf_data["id"].values
         self.data = leaf_data.values[:,2:]
+
