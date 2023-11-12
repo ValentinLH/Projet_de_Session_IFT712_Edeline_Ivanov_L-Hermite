@@ -77,15 +77,15 @@ class RandomForest(StrategieClassification):
         if not class_names:
             class_names = [f'Class {i}' for i in range(len(np.unique(t_train)))]
 
-        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(4, 4), dpi=800)
+        #fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(4, 4), dpi=800)
         tree.plot_tree(self.random_forest_model.estimators_[0],
                     feature_names=feature_names,
                     class_names=class_names,
                     filled=True)
-        fig.savefig('rf_individualtree.png')
-        plt.show()
+        #fig.savefig('rf_individualtree.png')
+        #plt.show()
 
-        return
+        
 
         # Utilisez seulement les deux premières caractéristiques pour l'affichage
         x_train_subset = x_train[:, :2]
@@ -98,9 +98,16 @@ class RandomForest(StrategieClassification):
         plt.title('Training Data')
 
         # Affichage de la frontière de décision
-        xx, yy = np.meshgrid(np.linspace(np.min(x_train_subset[:, 0]) - 2, np.max(x_train_subset[:, 0]) + 2, 100),
-                            np.linspace(np.min(x_train_subset[:, 1]) - 2, np.max(x_train_subset[:, 1]) + 2, 100))
-        Z = self.random_forest_model.predict(np.c_[xx.ravel(), yy.ravel()])
+        
+        xx, yy = np.meshgrid(np.linspace(np.min(x_train[:, 0]) - 2, np.max(x_train[:, 0]) + 2, 100),
+                            np.linspace(np.min(x_train[:, 1]) - 2, np.max(x_train[:, 1]) + 2, 100))
+        zz, aa = np.meshgrid(np.linspace(np.min(x_train[:, 2]) - 2, np.max(x_train[:, 2]) + 2, 100),
+                            np.linspace(np.min(x_train[:, 3]) - 2, np.max(x_train[:, 3]) + 2, 100))
+        
+       
+        espace = np.c_[xx.ravel(), yy.ravel(), zz.ravel(), aa.ravel()]
+        
+        Z = self.random_forest_model.predict(espace)
         Z = Z.reshape(xx.shape)
         plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
 
@@ -110,10 +117,19 @@ class RandomForest(StrategieClassification):
         plt.title('Testing Data')
 
         # Affichage de la frontière de décision
-        xx, yy = np.meshgrid(np.linspace(np.min(x_test_subset[:, 0]) - 2, np.max(x_test_subset[:, 0]) + 2, 100),
-                            np.linspace(np.min(x_test_subset[:, 1]) - 2, np.max(x_test_subset[:, 1]) + 2, 100))
-        Z = self.random_forest_model.predict(np.c_[xx.ravel(), yy.ravel()])
+        xx, yy = np.meshgrid(np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2, 100),
+                            np.linspace(np.min(x_test[:, 1]) - 2, np.max(x_test[:, 1]) + 2, 100))
+        
+        zz, aa = np.meshgrid(np.linspace(np.min(x_test[:, 2]) - 2, np.max(x_test[:, 2]) + 2, 100),
+                            np.linspace(np.min(x_test[:, 3]) - 2, np.max(x_test[:, 3]) + 2, 100))
+        
+       
+        espace = np.c_[xx.ravel(), yy.ravel(), zz.ravel(), aa.ravel()]
+        
+        Z = self.random_forest_model.predict(espace)
+        
         Z = Z.reshape(xx.shape)
+        
         plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
 
         plt.show()
