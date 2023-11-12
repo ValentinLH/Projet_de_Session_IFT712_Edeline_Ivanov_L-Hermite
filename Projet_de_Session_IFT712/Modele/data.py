@@ -1,9 +1,9 @@
 import pandas as pd
 class TrainData :
     def __init__(self,filedata):
-        self.leafClass
-        self.data
-        self.idLeaf
+        self.leafClass = None
+        self.data = None
+        self.idLeaf = None
         self.filedata = filedata
 
         self.readData(self.filedata)

@@ -112,9 +112,12 @@ class RandomForestWithPCA(StrategieClassification):
         Z = Z.reshape(xx.shape)
         plt.contourf(xx, yy, Z , cmap=plt.cm.Paired, alpha=0.8)
 
+        
+        t_test_encoded = le.fit_transform(t_test)
+
         # Affichage des données de test
         plt.subplot(1, 2, 2)
-        plt.scatter(x_test_pca_subset[:, 0], x_test_pca_subset[:, 1], c=t_test, cmap=plt.cm.Paired, edgecolor='k', s=20)
+        plt.scatter(x_test_pca_subset[:, 0], x_test_pca_subset[:, 1], c=t_test_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
         plt.title('Testing Data (PCA)')
 
         # Affichage de la frontière de décision pour les deux premières composantes principales des données de test
@@ -123,8 +126,9 @@ class RandomForestWithPCA(StrategieClassification):
 
         espace = np.c_[xx.ravel(), yy.ravel()]
         Z = self.random_forest_model.predict(espace)
+        Z = le.fit_transform(Z)
         Z = Z.reshape(xx.shape)
-        plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
+        plt.contourf(xx, yy, Z , cmap=plt.cm.Paired, alpha=0.8)
 
         # Affichage final
         plt.show()
