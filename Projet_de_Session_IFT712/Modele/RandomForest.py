@@ -316,42 +316,14 @@ class RandomForest(StrategieClassification):
         plt.scatter(x_train_subset[:, 0], x_train_subset[:, 1], c=t_train_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
         plt.title('Training Data')
 
-        # Affichage de la frontière de décision pour les deux premières dimensions
-        xx, yy = np.meshgrid(np.linspace(np.min(x_train[:, 0]) - 2, np.max(x_train[:, 0]) + 2, 100),
-                            np.linspace(np.min(x_train[:, 1]) - 2, np.max(x_train[:, 1]) + 2, 100))
-        
-        # Création de la grille d'espace en quatre dimensions pour la prédiction
-        zz, aa = np.meshgrid(np.linspace(np.min(x_train[:, 2]) - 2, np.max(x_train[:, 2]) + 2, 100),
-                            np.linspace(np.min(x_train[:, 3]) - 2, np.max(x_train[:, 3]) + 2, 100))
-        espace = np.c_[xx.ravel(), yy.ravel(), zz.ravel(), aa.ravel()]
-        
-        # Prédiction sur l'espace en quatre dimensions
-        Z = self.random_forest_model.predict(espace)
-        Z = Z.reshape(xx.shape)
-        
-        # Affichage de la frontière de décision
-        plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
+                
+        t_test_encoded = le.fit_transform(t_test)
+
 
         # Affichage des données de test
         plt.subplot(1, 2, 2)
-        plt.scatter(x_test_subset[:, 0], x_test_subset[:, 1], c=t_test, cmap=plt.cm.Paired, edgecolor='k', s=20)
+        plt.scatter(x_test_subset[:, 0], x_test_subset[:, 1], c=t_test_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
         plt.title('Testing Data')
-
-        # Affichage de la frontière de décision pour les deux premières dimensions des données de test
-        xx, yy = np.meshgrid(np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2, 100),
-                            np.linspace(np.min(x_test[:, 1]) - 2, np.max(x_test[:, 1]) + 2, 100))
-        
-        # Création de la grille d'espace en quatre dimensions pour la prédiction
-        zz, aa = np.meshgrid(np.linspace(np.min(x_test[:, 2]) - 2, np.max(x_test[:, 2]) + 2, 100),
-                            np.linspace(np.min(x_test[:, 3]) - 2, np.max(x_test[:, 3]) + 2, 100))
-        espace = np.c_[xx.ravel(), yy.ravel(), zz.ravel(), aa.ravel()]
-        
-        # Prédiction sur l'espace en quatre dimensions
-        Z = self.random_forest_model.predict(espace)
-        Z = Z.reshape(xx.shape)
-        
-        # Affichage de la frontière de décision
-        plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
 
         # Affichage final
         plt.show()

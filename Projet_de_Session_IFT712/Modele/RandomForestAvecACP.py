@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from sklearn import tree
 from sklearn.decomposition import PCA
 
-class RandomForestWithPCA(StrategieClassification):
+class RandomForestAvecACP(StrategieClassification):
     def __init__(self, n_estimators=100, max_depth=None, random_state=None, n_components=2):
         """
         Stratégie de classification utilisant un modèle Random Forest après une ACP.
