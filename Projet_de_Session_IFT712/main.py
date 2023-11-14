@@ -6,21 +6,26 @@ from Modele.ClassifieurLineaire import *
 from Modele.Perceptron import *
 from Modele.SVM import *
 from Modele.RandomForest import *
+from Modele.RandomForestAvecACP import *
+import pandas as pd
+from Modele.data import TrainData
+from sklearn.metrics import accuracy_score
 
-# Charger un jeu de données pour l'exemple (Iris dataset)
-data = load_iris()
-X, y = data.data, data.target
+# Charger un jeu de données pour l'exemple (Leaf dataset)
+trainData = TrainData("leaf-classification/train.csv")
+X, y = trainData.data, trainData.leafClass
+
+
+# Normalisation des données
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
 
 # Diviser les données en ensembles d'entraînement et de test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Normalisation des données
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
-
-strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
-#strategie_perceptron = RandomForest()
+#strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
+strategie_perceptron = RandomForest()
+#strategie_perceptron = RandomForestAvecACP()
 classifieur = ClassifieurLineaire(strategie_perceptron)
 
 '''strategie_SVM = SVM(kernel='linear', C=1.0)
@@ -32,6 +37,14 @@ classifieur.entrainement(X_train, y_train)
 # Prédiction sur un exemple de test
 exemple_test = X_test[0]
 prediction = classifieur.prediction(exemple_test)
+
+predictions = [classifieur.prediction(x) for x in X_test]
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, predictions)
+
+# Print or use the accuracy as needed
+print(f'Accuracy: {accuracy}')
 
 print("Classe prédite pour l'exemple de test :", prediction)
 
