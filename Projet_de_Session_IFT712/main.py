@@ -6,9 +6,6 @@ from Modele.ClassifieurLineaire import *
 from Modele.Perceptron import *
 from Modele.SVM import *
 from Modele.RandomForest import *
-from Modele.RechercheHyperparameter import *
-from Modele.SousEchantillonnageAleatoire import *
-from Modele.ValidationCroisee import *
 
 # Charger un jeu de données pour l'exemple (Iris dataset)
 data = load_iris()
