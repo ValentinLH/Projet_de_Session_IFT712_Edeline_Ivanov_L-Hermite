@@ -58,8 +58,41 @@ class Perceptron(StrategieClassification):
         return self.w_0, self.w
     
     def afficher(self, x_train, t_train, x_test, t_test):
+        
+        le = LabelEncoder()
+
+        # Encode training labels
+        t_train_encoded = le.fit_transform(t_train)
         plt.figure(0)
-        plt.scatter(x_train[:, 0], x_train[:, 1], s=t_train * 100 + 20, c=t_train)
+        plt.scatter(x_train[:, 0], x_train[:, 1], s=(t_train_encoded * 100 + 20).astype(int), c=t_train_encoded)
+
+        pente = -self.perceptron_model.coef_[0, 0] / self.perceptron_model.coef_[0, 1]
+        xx_train = np.linspace(np.min(x_train[:, 0]) - 2, np.max(x_train[:, 0]) + 2, num=99)
+
+        yy_train = pente * xx_train - self.perceptron_model.intercept_ / self.perceptron_model.coef_[0, 1]
+        plt.plot(xx_train, yy_train)
+        plt.title('Training data')
+
+        # Encode testing labels
+        t_test_encoded = le.transform(t_test)
+        plt.figure(1)
+        plt.scatter(x_test[:, 0], x_test[:, 1], s=(t_test_encoded * 100 + 20).astype(int), c=t_test_encoded)
+
+        pente = -self.perceptron_model.coef_[0, 0] / self.perceptron_model.coef_[0, 1]
+        xx_test = np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2, num=99)
+        yy_test = pente * xx_test - self.perceptron_model.intercept_ / self.perceptron_model.coef_[0, 1]
+        plt.plot(xx_test, yy_test)
+        plt.title('Testing data')
+
+        plt.show()
+
+        return
+        le = LabelEncoder()
+
+        # Encode training labels
+        t_train_encoded = le.fit_transform(t_train)
+        plt.figure(0)
+        plt.scatter(x_train[:, 0], x_train[:, 1], s=(t_train_encoded * 100 + 20).astype(int), c=t_train_encoded)
 
         pente = -self.w[0] / self.w[1]
         xx = np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2)
@@ -67,8 +100,10 @@ class Perceptron(StrategieClassification):
         plt.plot(xx, yy)
         plt.title('Training data')
 
+        # Encode testing labels
+        t_test_encoded = le.transform(t_test)
         plt.figure(1)
-        plt.scatter(x_test[:, 0], x_test[:, 1], s=t_test * 100 + 20, c=t_test)
+        plt.scatter(x_test[:, 0], x_test[:, 1], s=(t_test_encoded * 100 + 20).astype(int), c=t_test_encoded)
 
         pente = -self.w[0] / self.w[1]
         xx = np.linspace(np.min(x_test[:, 0]) - 2, np.max(x_test[:, 0]) + 2)
@@ -77,9 +112,9 @@ class Perceptron(StrategieClassification):
         plt.title('Testing data')
 
         plt.show()
-
-
-    def afficher(self, x_train, t_train, x_test, t_test):
+  
+        
+        return
         le = LabelEncoder()
 
         # Encode training labels
@@ -106,7 +141,7 @@ class Perceptron(StrategieClassification):
 
         plt.show()
         
-    
+"""
     def afficher(self, x_train, t_train, x_test=None, t_test=None, feature_names=None, class_names=None):
         if not feature_names:
             feature_names = [f'Feature {i}' for i in range(x_train.shape[1])]
@@ -143,3 +178,4 @@ class Perceptron(StrategieClassification):
         plt.legend(handles=class_handles)
 
         plt.show()
+"""
