@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.calibration import LabelEncoder
 from sklearn.decomposition import PCA
+from scipy.interpolate import LinearNDInterpolator
 
 class Perceptron(StrategieClassification):
     def __init__(self, learning_rate=0.01, max_iterations=1000,penalty='l2'):
@@ -83,11 +84,12 @@ class Perceptron(StrategieClassification):
         Z = le.transform(Z)
         Z = Z.reshape(xx.shape)
 
+       
         
         plt.figure(figsize=(14, 8))
         plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)  # Colorier les cases selon les prédictions
 
-        plt.scatter(x_train[:, 0], x_train[:, 1], c=t_train_encoded, edgecolors='k', cmap=plt.cm.Paired)  # Tracer les données
+        plt.scatter(x_train_2d[:, 0], x_train_2d[:, 1], c=t_train_encoded, edgecolors='k', cmap=plt.cm.Paired)  # Tracer les données
 
         plt.xlim(xx.min(), xx.max())
         plt.ylim(yy.min(), yy.max())
@@ -178,6 +180,198 @@ class Perceptron(StrategieClassification):
         plt.title('Testing data')
 
         plt.show()
+    
+    
+    def afficher(self, x_train, t_train, x_test, t_test):
+        le = LabelEncoder()
+        t_train_encoded = le.fit_transform(t_train)
+        t_test_encoded = le.transform(t_test)
+
+        h = 0.05
+        x_min, x_max = x_train[:, 0].min() - .5, x_train[:, 0].max() + .5
+        y_min, y_max = x_train[:, 1].min() - .5, x_train[:, 1].max() + .5
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+
+        # Utiliser LinearNDInterpolator pour interpoler les données
+        points = np.column_stack((x_train[:, 0], x_train[:, 1]))
+        points = x_train
+        values = t_train_encoded
+        interpolator = LinearNDInterpolator(points, values)
+        grid_z = interpolator(np.c_[xx.ravel(), yy.ravel()])
+
+        # Remettre les résultats en forme pour le tracé
+        Z = grid_z.reshape(xx.shape)
+
+        plt.figure(figsize=(14, 8))
+        plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
+        plt.scatter(x_train[:, 0], x_train[:, 1], c=t_train_encoded, edgecolors='k', cmap=plt.cm.Paired)
+        plt.xlim(xx.min(), xx.max())
+        plt.ylim(yy.min(), yy.max())
+        plt.xticks(())
+        plt.yticks(())
+
+        plt.title('Frontières de décision')
+        plt.show()
+        
+    
+    def afficher(self, x_train, t_train, x_test, t_test):
+        le = LabelEncoder()
+        t_train_encoded = le.fit_transform(t_train)
+        t_test_encoded = le.transform(t_test)
+
+        h = 0.05
+        x_min, x_max = x_train[:, 0].min() - .5, x_train[:, 0].max() + .5
+        y_min, y_max = x_train[:, 1].min() - .5, x_train[:, 1].max() + .5
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+
+        # Utiliser LinearNDInterpolator pour interpoler les données
+        points = np.column_stack((x_train[:, 0], x_train[:, 1]))
+        values = x_train[:,2:]
+        
+        interpolator = LinearNDInterpolator(points, values)
+        grid_xy = np.c_[xx.ravel(), yy.ravel()]
+        grid_dim = interpolator(grid_xy)
+        grid_tot = np.c_[grid_xy,grid_dim]
+        grid_tot[np.isnan(grid_tot)] = 0
+        grid_z = self.perceptron_model.predict(grid_tot)
+        
+        Z = le.transform(grid_z)
+        # Remettre les résultats en forme pour le tracé
+        Z = Z.reshape(xx.shape)
+
+        
+
+        plt.figure(figsize=(14, 8))
+        plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
+        plt.scatter(x_train[:, 0], x_train[:, 1], c=t_train_encoded, edgecolors='k', cmap=plt.cm.Paired)
+        plt.xlim(xx.min(), xx.max())
+        plt.ylim(yy.min(), yy.max())
+        plt.xticks(())
+        plt.yticks(())
+
+        plt.title('Frontières de décision - Ensemble d\'Entraienement')
+        plt.show()    
+        
+        h = 0.05
+        x_min, x_max = x_test[:, 0].min() - .5, x_test[:, 0].max() + .5
+        y_min, y_max = x_test[:, 1].min() - .5, x_test[:, 1].max() + .5
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+
+        # Utiliser LinearNDInterpolator pour interpoler les données
+        points = np.column_stack((x_test[:, 0], x_test[:, 1]))
+        values = x_test[:,2:]
+        
+        interpolator = LinearNDInterpolator(points, values)
+        grid_xy = np.c_[xx.ravel(), yy.ravel()]
+        grid_dim = interpolator(grid_xy)
+        grid_tot = np.c_[grid_xy,grid_dim]
+        grid_tot[np.isnan(grid_tot)] = 0
+        grid_z = self.perceptron_model.predict(grid_tot)
+        
+        Z = le.transform(grid_z)
+        # Remettre les résultats en forme pour le tracé
+        Z = Z.reshape(xx.shape)
+
+        
+
+        plt.figure(figsize=(14, 8))
+        plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
+        plt.scatter(x_test[:, 0], x_test[:, 1], c=t_test_encoded, edgecolors='k', cmap=plt.cm.Paired)
+        plt.xlim(xx.min(), xx.max())
+        plt.ylim(yy.min(), yy.max())
+        plt.xticks(())
+        plt.yticks(())
+
+        plt.title('Frontières de décision - Données de test')
+        plt.show()    
+    
+    """ 
+    def afficher(self, x_train, t_train, x_test, t_test):
+        le = LabelEncoder()
+
+        # Encode training labels
+        t_train_encoded = le.fit_transform(t_train)
+        t_test_encoded = le.transform(t_test)
+
+
+        N = len(x_train[0])
+        x_min, x_max = x_train.min(axis=0) - .5, x_train.max(axis=0) + .5
+        x_min, x_max = np.ones(N) *x_min ,np.ones(N) *x_max 
+
+        
+        h = 0.05  # Contrôle la résolution de la grille
+
+        x_min_mesh, x_max_mesh = x_train[:, 0].min() - .5, x_train[:, 0].max() + .5
+        y_min_mesh, y_max_mesh = x_train[:, 1].min() - .5, x_train[:, 1].max() + .5
+        xx, yy = np.meshgrid(np.arange(x_min_mesh, x_max_mesh, h), np.arange(y_min_mesh, y_max_mesh, h))
+
+        X_predict = np.linspace(x_min,x_max,xx.ravel().shape[0])
+        # Utilisez inverse_transform pour obtenir les coordonnées originales dans l'espace d'origine
+        #X_predict = pca.inverse_transform(np.c_[xx.ravel(), yy.ravel()])
+
+        # Classifier chaque point de la grille
+        Z = self.perceptron_model.predict(X_predict)
+        Z = le.transform(Z)
+        Z = Z.reshape(xx.shape)
+        xx_predict = X_predict[:,0].reshape(xx.shape)
+        yy_predict = X_predict[:,1].reshape(yy.shape)
+       
+        
+        plt.figure(figsize=(14, 8))
+        plt.pcolormesh(xx_predict, yy_predict, Z, cmap=plt.cm.Paired)  # Colorier les cases selon les prédictions
+
+        plt.scatter(x_train[:, 0], x_train[:, 1], c=t_train_encoded, edgecolors='k', cmap=plt.cm.Paired)  # Tracer les données
+
+        plt.xlim(xx.min(), xx.max())
+        plt.ylim(yy.min(), yy.max())
+        plt.xticks(())
+        plt.yticks(())
+
+        plt.title('Frontières de décision')
+        plt.show()
+        
+        return
+    
+    def afficher(self, x_train, t_train, x_test, t_test):
+        le = LabelEncoder()
+
+        # Encode training labels
+        t_train_encoded = le.fit_transform(t_train)
+        t_test_encoded = le.transform(t_test)
+
+        N = len(x_train[0])
+        x_min, x_max = x_train.min(axis=0) - 0.5, x_train.max(axis=0) + 0.5
+        x_min, x_max = np.ones(N) * x_min, np.ones(N) * x_max
+
+        h = 0.05  # Contrôle la résolution de la grille
+
+        xx, yy = np.meshgrid(np.arange(x_min[0], x_max[0], h), np.arange(x_min[1], x_max[1], h))
+
+        # Create X_predict with the same number of features as x_train
+        X_predict = np.c_[xx.ravel(), yy.ravel()]
+        #np.ones_like(xx.ravel()) * (N-1)
+
+        # Use decision_function instead of predict
+        Z = self.perceptron_model.decision_function(X_predict)
+        Z = np.sign(Z)  # Convert to -1 or 1
+        Z = le.transform(Z)
+        Z = Z.reshape(xx.shape)
+
+        plt.figure(figsize=(14, 8))
+        plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)  # Colorier les cases selon les prédictions
+
+        plt.scatter(x_train[:, 0], x_train[:, 1], c=t_train_encoded, edgecolors='k', cmap=plt.cm.Paired)  # Tracer les données
+
+        plt.xlim(xx.min(), xx.max())
+        plt.ylim(yy.min(), yy.max())
+        plt.xticks(())
+        plt.yticks(())
+
+        plt.title('Frontières de décision')
+        plt.show()
+
+        return
+        """
     
 def visualizeClassificationAreas(usedClassifier,XtrainSet, ytrainSet,XtestSet, ytestSet, plotDensity=0.01 ):
     '''
