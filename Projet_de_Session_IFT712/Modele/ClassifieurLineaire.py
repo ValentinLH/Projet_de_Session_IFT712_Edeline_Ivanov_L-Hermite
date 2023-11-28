@@ -93,7 +93,7 @@ class ClassifieurLineaire:
         # Remettre les résultats en forme pour le tracé
         Z = Z.reshape(xx.shape)
 
-        
+        plt.figure(0)
 
         plt.figure(figsize=(14, 8))
         plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
@@ -103,8 +103,7 @@ class ClassifieurLineaire:
         plt.xticks(())
         plt.yticks(())
 
-        plt.title('Frontières de décision - Ensemble d\'Entraienement')
-        plt.show()    
+        plt.title('Frontières de décision - Ensemble d\'Entrainement')
         
         h = 0.05
         x_min, x_max = x_test[:, 0].min() - .5, x_test[:, 0].max() + .5
@@ -126,7 +125,10 @@ class ClassifieurLineaire:
         # Remettre les résultats en forme pour le tracé
         Z = Z.reshape(xx.shape)
 
+        plt.figure(1)
+
         plt.figure(figsize=(14, 8))
+        plt.close(0)
         plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
         plt.scatter(x_test[:, 0], x_test[:, 1], c=t_test_encoded, edgecolors='k', cmap=plt.cm.Paired)
         plt.xlim(xx.min(), xx.max())
