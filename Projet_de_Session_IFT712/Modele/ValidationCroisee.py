@@ -1,6 +1,5 @@
 from sklearn.model_selection import KFold, train_test_split
 from .RechercheHyperparameter import StrategyRechercheHyperparameter
-import numpy as np
 
 class ValidationCroisee(StrategyRechercheHyperparameter):
     def __init__(self, k, proportion_Test, proportion_Validation):

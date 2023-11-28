@@ -3,7 +3,6 @@ from .ClassifieurLineaire import StrategieClassification
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.calibration import LabelEncoder
-from sklearn.decomposition import PCA
 from scipy.interpolate import LinearNDInterpolator
 
 class Perceptron(StrategieClassification):

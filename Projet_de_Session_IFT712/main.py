@@ -1,13 +1,10 @@
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.datasets import load_iris
 from Modele.ClassifieurLineaire import *
 from Modele.Perceptron import *
 from Modele.SVM import *
 from Modele.RandomForest import *
 from Modele.RandomForestAvecACP import *
-import pandas as pd
 from Modele.data import TrainData
 from sklearn.metrics import accuracy_score
 

@@ -4,7 +4,6 @@ from .ClassifieurLineaire import StrategieClassification
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import tree
-from scipy.interpolate import LinearNDInterpolator
 
 class RandomForest(StrategieClassification):
     def __init__(self, n_estimators=100, max_depth=None, random_state=None):

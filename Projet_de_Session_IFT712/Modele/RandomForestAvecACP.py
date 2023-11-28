@@ -3,7 +3,6 @@ from sklearn.ensemble import RandomForestClassifier
 from .ClassifieurLineaire import StrategieClassification
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import tree
 from sklearn.decomposition import PCA
 
 class RandomForestAvecACP(StrategieClassification):
