@@ -40,7 +40,7 @@ class Perceptron(StrategieClassification):
         :return: 1 si la classe prédite est positive, -1 sinon.
         """
         if self.perceptron_model is not None:
-            return self.perceptron_model.predict([x])[0]
+            return self.perceptron_model.predict(x)
         return 0  # Valeur par défaut si le modèle n'est pas encore entraîné
 
     def erreur(self, t, prediction):

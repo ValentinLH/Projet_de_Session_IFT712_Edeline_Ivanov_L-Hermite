@@ -38,7 +38,7 @@ class RandomForest(StrategieClassification):
         :return: La prédiction du modèle.
         """
         if self.random_forest_model is not None:
-            return self.random_forest_model.predict([x])[0]
+            return self.random_forest_model.predict(x)
         return 0  # Valeur par défaut si le modèle n'est pas encore entraîné
 
     def erreur(self, t, prediction):
