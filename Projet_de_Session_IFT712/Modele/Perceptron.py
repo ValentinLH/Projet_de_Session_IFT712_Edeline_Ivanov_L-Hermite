@@ -129,3 +129,19 @@ class Perceptron(StrategieClassification):
         plt.title('Frontières de décision - Données de test')
         plt.show()    
  
+    def get_hyperparametres(self):
+    
+        learning_rate_liste = np.linspace(0.001, 1, 10) #np.array([0.01])
+        max_iterations_liste = np.linspace(500, 1500, 10).astype(int)
+        penalty_liste = np.array(['l2'])
+        
+        
+        return [ learning_rate_liste,
+                 max_iterations_liste,
+                 penalty_liste]
+    
+    def set_hyperparametres(self, hyperparametres_list):
+        self.learning_rate = hyperparametres_list[0]
+        self.max_iterations = hyperparametres_list[1]
+        self.penalty= hyperparametres_list[2]
+        

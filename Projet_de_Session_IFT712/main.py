@@ -13,7 +13,7 @@ from Modele.data import TrainData
 from sklearn.metrics import accuracy_score
 
 # Charger un jeu de données pour l'exemple (Leaf dataset)
-trainData = TrainData("train.csv")
+trainData = TrainData("leaf-classification/train.csv")
 X, y = trainData.data, trainData.leafClass
 
 
@@ -24,20 +24,20 @@ X = scaler.fit_transform(X)
 # Diviser les données en ensembles d'entraînement et de test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
-#strategie_perceptron = RandomForest()  
+#strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
+strategie_perceptron = RandomForest()  
 #strategie_perceptron = RandomForestAvecACP()
 classifieur = ClassifieurLineaire(strategie_perceptron)
 
-strategie_Adaboost = AdaBoost(n_estimators=200, learning_rate=0.01, random_state=0, algorithm="SAMME.R", max_depth_tree_classifieur=3)
-classifieur = ClassifieurLineaire(strategie_Adaboost)
+#strategie_Adaboost = AdaBoost(n_estimators=200, learning_rate=0.01, random_state=0, algorithm="SAMME.R", max_depth_tree_classifieur=3)
+#classifieur = ClassifieurLineaire(strategie_Adaboost)
 
 
 #Recherche d'hyperparamètres
 #Validation croisée
-'''stategie_hyper_parametre = ValidationCroisee(10)
+stategie_hyper_parametre = ValidationCroisee(10)
 Recherche = RechercheHyperparameter(stategie_hyper_parametre)
-Recherche.recherche(classifieur, X, y)'''
+Recherche.recherche(classifieur, X, y)
 
 #Sous echantillonnage aléatoire
 '''stategie_hyper_parametre = SousEchantillonnage(10, 0.2)

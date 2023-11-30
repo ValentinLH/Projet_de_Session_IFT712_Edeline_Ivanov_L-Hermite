@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from sklearn import tree
 
 class RandomForest(StrategieClassification):
-    def __init__(self, n_estimators=100, max_depth=None, random_state=None):
+    def __init__(self, n_estimators=100, criterion= "gini", max_depth=None, random_state=None):
         """
         Stratégie de classification utilisant un modèle Random Forest de scikit-learn.
 
@@ -17,6 +17,7 @@ class RandomForest(StrategieClassification):
         self.n_estimators = n_estimators
         self.max_depth = max_depth
         self.random_state = random_state
+        self.criterion = criterion
         self.random_forest_model = None
 
     def entrainer(self, x_train, t_train):
@@ -26,7 +27,7 @@ class RandomForest(StrategieClassification):
         :param x_train: Les données d'entraînement.
         :param t_train: Les étiquettes de classe cibles.
         """
-        self.random_forest_model = RandomForestClassifier(n_estimators=self.n_estimators, max_depth=self.max_depth, random_state=self.random_state)
+        self.random_forest_model = RandomForestClassifier(criterion=self.criterion,n_estimators=self.n_estimators, max_depth=self.max_depth, random_state=self.random_state)
         self.random_forest_model.fit(x_train, t_train)
 
     def prediction(self, x):
@@ -109,6 +110,27 @@ class RandomForest(StrategieClassification):
 
         # Affichage final
         plt.show()
+
+    def get_hyperparametres(self):
+    
+        n_estimators_liste = np.linspace(1, 500, 20).astype(int) #np.array([0.01])
+        
+        criterion_liste = np.array(["gini", "entropy", "log_loss"])
+        max_depth_liste = np.array([None]) #np.linspace(500, 1500, 10).astype(int)
+        
+        
+        return [ n_estimators_liste,
+                 criterion_liste,
+                 max_depth_liste]
+    
+    def set_hyperparametres(self, hyperparametres_list):
+        self.n_estimators = hyperparametres_list[0]
+        self.criterion  = hyperparametres_list[1]
+        self.max_depth= hyperparametres_list[2]
+        
+
+
+
 
 """
     def afficher(self, x_train, t_train, x_test, t_test):
