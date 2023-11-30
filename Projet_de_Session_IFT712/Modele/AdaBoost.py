@@ -67,6 +67,33 @@ class AdaBoost(StrategieClassification):
         """
         return 1 if t != prediction else 0
     
+    def get_hyperparametres(self):
+        '''estimator_liste = np.arange(50, 501, 50, dtype=int)
+        learning_rate_liste = np.array([0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.5])
+        random_state_liste = np.array([0, 1, 5, 10, 20, 50, 75, 100])
+        algorithm_liste = np.array(["SAMME", "SAMME.R"])
+        depth_liste = np.arange(1, 9, 1, dtype=int)'''
+
+        estimator_liste = np.array([50])
+        learning_rate_liste = np.array([0.001])
+        random_state_liste = np.array([75])
+        algorithm_liste = np.array(["SAMME", "SAMME.R"])
+        depth_liste = np.array([5])
+
+        return [estimator_liste,
+                         learning_rate_liste,
+                         random_state_liste,
+                         algorithm_liste,
+                         depth_liste]
+    
+    def set_hyperparametres(self, hyperparametres_list):
+        self.n_estimators = hyperparametres_list[0]
+        self.learning_rate = hyperparametres_list[1]
+        self.random_state = hyperparametres_list[2]
+        self.algorithm = hyperparametres_list[3]
+        self.max_depth_tree_classifieur = hyperparametres_list[4]
+
+    
     def afficher(self, x_train, t_train, x_test, t_test):
         """
         Affiche les données dans un espace à deux dimensions

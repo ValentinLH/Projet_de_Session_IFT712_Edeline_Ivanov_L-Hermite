@@ -67,6 +67,18 @@ class ClassifieurLineaire:
         Retourne les paramètres du modèle
         """
         return self.strategie.parametres()
+    
+    def get_hyperparametres(self):
+        """
+        Retourne les hyperparamètres du modèle
+        """
+        return self.strategie.get_hyperparametres()
+    
+    def set_hyperparametres(self, hyperparametres_list):
+        """
+        definit les hyperparamètres du modèle
+        """
+        self.strategie.set_hyperparametres(hyperparametres_list)
 
     def afficher(self, x_train, t_train, x_test, t_test):
         le = LabelEncoder()
