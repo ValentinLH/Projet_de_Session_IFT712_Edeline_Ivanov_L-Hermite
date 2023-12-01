@@ -6,9 +6,9 @@ from Modele.SVM import *
 from Modele.RandomForest import *
 from Modele.RandomForestAvecACP import *
 from Modele.AdaBoost import *
-from Modele.RechercheHyperparameter import *
-from Modele.SousEchantillonnageAleatoire import *
-from Modele.ValidationCroisee import *
+from Modele.RechercheHyperparameter.RechercheHyperparameter import *
+from Modele.RechercheHyperparameter.SousEchantillonnageAleatoire import *
+from Modele.RechercheHyperparameter.ValidationCroisee import *
 from Modele.data import TrainData
 from sklearn.metrics import accuracy_score
 
@@ -35,9 +35,11 @@ classifieur = ClassifieurLineaire(strategie_perceptron)
 
 #Recherche d'hyperparamètres
 #Validation croisée
+
 stategie_hyper_parametre = ValidationCroisee(10)
 Recherche = RechercheHyperparameter(stategie_hyper_parametre)
 Recherche.recherche(classifieur, X, y)
+
 
 #Sous echantillonnage aléatoire
 '''stategie_hyper_parametre = SousEchantillonnage(10, 0.2)
