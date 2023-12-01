@@ -9,6 +9,7 @@ from Modele.AdaBoost import *
 from Modele.RechercheHyperparameter.RechercheHyperparameter import *
 from Modele.RechercheHyperparameter.SousEchantillonnageAleatoire import *
 from Modele.RechercheHyperparameter.ValidationCroisee import *
+from Modele.RechercheHyperparameter.BootstrapValidation import *
 from Modele.data import TrainData
 from sklearn.metrics import accuracy_score
 
@@ -24,8 +25,8 @@ X = scaler.fit_transform(X)
 # Diviser les données en ensembles d'entraînement et de test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-#strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
-strategie_perceptron = RandomForest()  
+strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
+#strategie_perceptron = RandomForest()  
 #strategie_perceptron = RandomForestAvecACP()
 classifieur = ClassifieurLineaire(strategie_perceptron)
 
@@ -36,7 +37,7 @@ classifieur = ClassifieurLineaire(strategie_perceptron)
 #Recherche d'hyperparamètres
 #Validation croisée
 
-stategie_hyper_parametre = ValidationCroisee(10)
+stategie_hyper_parametre = BootstrapValidation(2,10)
 Recherche = RechercheHyperparameter(stategie_hyper_parametre)
 Recherche.recherche(classifieur, X, y)
 
