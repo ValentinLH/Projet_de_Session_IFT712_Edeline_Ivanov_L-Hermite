@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 from scipy.interpolate import LinearNDInterpolator
 from sklearn.calibration import LabelEncoder
+from sklearn.metrics import classification_report, confusion_matrix, f1_score, precision_score, recall_score
 
 # Créez une classe abstraite pour la stratégie
 class StrategieClassification(ABC):   
@@ -150,3 +151,27 @@ class ClassifieurLineaire:
 
         plt.title('Frontières de décision - Données de test')
         plt.show()    
+        
+    # Fonction pour évaluer le modèle 
+    def evaluer(self, X, y):
+        predictions = self.prediction(X)
+        precision = precision_score(y, predictions, average='weighted')
+        rappel = recall_score(y, predictions, average='weighted')
+        f1 = f1_score(y, predictions, average='weighted')
+        matrice_confusion = confusion_matrix(y, predictions)
+        # Rapport de classification
+        #class_report = classification_report(X, y)
+
+        # Tracer la matrice de confusion
+        plt.imshow(matrice_confusion, interpolation='nearest', cmap=plt.cm.Blues)
+        plt.title('Matrice de Confusion')
+        plt.colorbar()
+        plt.xlabel('Vraies étiquettes')
+        plt.ylabel('Étiquettes prédites')
+        plt.show()
+
+        # Afficher le rapport de classification
+        #print("Rapport de Classification:\n", class_report)
+        
+        return precision, rappel, f1, matrice_confusion
+
