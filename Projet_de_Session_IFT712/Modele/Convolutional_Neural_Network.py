@@ -42,7 +42,7 @@ class Net(nn.Module, StrategieClassification):
 
         # convolutional layer 1 & max pool layer 1
         self.layer1 = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=3),
+            nn.Conv2d(3, 16, kernel_size=3),
             nn.MaxPool2d(kernel_size=2))
 
         # convolutional layer 2 & max pool layer 2
@@ -64,7 +64,8 @@ class Net(nn.Module, StrategieClassification):
     def forward(self, x):
         out = self.layer1(x)
         out = self.layer2(out)
-        out = out.reshape(out.size(0), -1)
+        #out = out.reshape(out.size(0), -1)
+        out = out.flatten()
         out = self.fc(out)
         return out
 
@@ -74,7 +75,7 @@ class Net(nn.Module, StrategieClassification):
             running_loss = 0.0
             for i in range(len(x_train)):
                 # get the inputs; data is a list of [inputs, labels]
-                inputs, labels = x_train[0], t_train[0]
+                inputs, labels = x_train[i], t_train[i]
 
                 # zero the parameter gradients
                 self.optimizer.zero_grad()
