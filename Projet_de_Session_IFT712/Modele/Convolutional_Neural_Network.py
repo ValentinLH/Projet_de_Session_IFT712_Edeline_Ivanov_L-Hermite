@@ -1,5 +1,5 @@
 
-from Projet_de_Session_IFT712.Modele.ClassifieurLineaire import StrategieClassification
+from Modele.ClassifieurLineaire import StrategieClassification
 
 import torch
 import torchvision
@@ -7,6 +7,32 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+
+
+
+"""
+####################################################################
+
+Net est une classe hybride, il y avais une récursion self.model = Net()
+car tout les Net() appellait dans leur constructeur Net()
+
+ensuite
+on a plein de maniere de l'implementé
+
+on peut faire un modele "complet" CNN ne marchant qu'avec torch et 
+notre classe encapsulerais celle ci avec la structure de la stratégie et des sanity checks
+
+ou on peut faire un module incestueux combinant les deux, nous allons en reparler dans un futur proche
+
+Bisous
+
+
+
+
+
+####################################################################
+"""
+
 
 class Net(nn.Module, StrategieClassification):
     def __init__(self):
@@ -26,14 +52,14 @@ class Net(nn.Module, StrategieClassification):
 
         self.fc = nn.Linear(32 * 54 * 54, 6)
 
-        self.model = Net()
+        #self.model = Net()
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.epochs = 2
 
         self.criterion = nn.CrossEntropyLoss()
-        self.optimizer = optim.SGD(self.model.parameters(), lr=0.001, momentum=0.9)
+        self.optimizer = optim.SGD(self.parameters(), lr=0.001, momentum=0.9) #on parle sde paramettre du module
 
     def forward(self, x):
         out = self.layer1(x)
@@ -46,7 +72,7 @@ class Net(nn.Module, StrategieClassification):
         for epoch in range(self.epochs):  # loop over the dataset multiple times
 
             running_loss = 0.0
-            for i in enumerate(len(x_train)):
+            for i in range(len(x_train)):
                 # get the inputs; data is a list of [inputs, labels]
                 inputs, labels = x_train[0], t_train[0]
 
@@ -54,7 +80,7 @@ class Net(nn.Module, StrategieClassification):
                 self.optimizer.zero_grad()
 
                 # forward + backward + optimize
-                outputs = net(inputs)
+                outputs = self.forward(inputs)
                 loss = self.criterion(outputs, labels)
                 loss.backward()
                 self.optimizer.step()
@@ -70,8 +96,10 @@ class Net(nn.Module, StrategieClassification):
     def prediction(self, x):
         pass
 
+    
     def parametres(self):
         pass
+    
 
     def erreur(self, t, prediction):
         pass
@@ -81,7 +109,6 @@ class Net(nn.Module, StrategieClassification):
 
 
 
-net = Net()
 
 
 # class Convolutional_Neural_Network(StrategieClassification) :

@@ -28,7 +28,7 @@ class TrainData:
         self.data = leaf_data.values[:, 2:]
 
     def read_image(self,
-                   data_dir=r"C:\Users\maxim\Documents\DI5_Sherbrooke\SESSION_AUTONME\IFI_712-Technique_apprentissage\Projet_de_Session_IFT712_Edeline_Ivanov_L-Hermite\leaf-classification\images"):
+                   data_dir=r"leaf-classification\\images"):
         train_transforms = transforms.Compose([
             transforms.Resize((224,224)),
             transforms.ToTensor()])
