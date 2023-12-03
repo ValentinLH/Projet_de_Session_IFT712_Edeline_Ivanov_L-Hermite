@@ -37,9 +37,9 @@ classifieur = ClassifieurLineaire(strategie_perceptron)
 #Recherche d'hyperparamètres
 #Validation croisée
 
-stategie_hyper_parametre = BootstrapValidation(2,10)
-Recherche = RechercheHyperparameter(stategie_hyper_parametre)
-Recherche.recherche(classifieur, X, y)
+#stategie_hyper_parametre = BootstrapValidation(2,10)
+#Recherche = RechercheHyperparameter(stategie_hyper_parametre)
+#Recherche.recherche(classifieur, X, y)
 
 
 #Sous echantillonnage aléatoire
@@ -66,11 +66,12 @@ accuracy = accuracy_score(y_test, predictions)
 # Print or use the accuracy as needed
 print(f'Accuracy: {accuracy}')
 
-print("Classe prédite pour l'exemple de test :", prediction)
 
+precision, rappel, f1, _ = classifieur.evaluer(X_test,y_test)
+
+print(f'precision: {precision}')
+print(f'rappel: {rappel}')
+print(f'f1: {f1}')
 # Calcul de l'erreur
-erreur = classifieur.erreur(y_test[0], prediction)
-print("Erreur de classification :", erreur)
-
 
 classifieur.afficher_donnees_et_modele(X_train, y_train,X_test,y_test)
