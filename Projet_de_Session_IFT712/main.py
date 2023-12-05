@@ -77,6 +77,18 @@ for i in range(len(predictions)) :
 err = classifieur.erreur(y_test,torch.stack(ok))
 
 print('erreur = ', err)
+
+
+
+#precision, rappel, f1, _ = classifieur.evaluer(X_test,y_test)
+
+#print(f'precision: {precision}')
+#print(f'rappel: {rappel}')
+#print(f'f1: {f1}')
+# Calcul de l'erreur
+
+#classifieur.afficher_donnees_et_modele(X_train, y_train,X_test,y_test)
+
 # Normalisation des données
 # scaler = StandardScaler()
 # X = scaler.fit_transform(X)
@@ -115,12 +127,3 @@ print('erreur = ', err)
 #
 #
 # classifieur.afficher_donnees_et_modele(X_train, y_train,X_test,y_test)
-
-precision, rappel, f1, _ = classifieur.evaluer(X_test,y_test)
-
-print(f'precision: {precision}')
-print(f'rappel: {rappel}')
-print(f'f1: {f1}')
-# Calcul de l'erreur
-
-classifieur.afficher_donnees_et_modele(X_train, y_train,X_test,y_test)

@@ -63,7 +63,9 @@ class Net(nn.Module, StrategieClassification):
 
 
         self.criterion = nn.CrossEntropyLoss()
-        self.optimizer = optim.SGD(self.parameters(), lr=0.001, momentum=0.9) #on parle sde paramettre du module
+        #self.optimizer = optim.SGD(self.parameters(), lr=0.001, momentum=0.9) #on parle sde paramettre du module
+        self.optimizer = optim.Adam(self.parameters(), lr=0.001)
+
 
     def forward(self, x):
         out = self.layer1(x)
