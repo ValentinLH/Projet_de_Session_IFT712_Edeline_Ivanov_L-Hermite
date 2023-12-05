@@ -4,7 +4,7 @@ from PIL import Image
 from matplotlib import pyplot as plt
 from torchvision import datasets, transforms
 from torch.utils.data import Dataset
-import os
+from sklearn.preprocessing import LabelEncoder
 
 
 class TrainData:
@@ -35,13 +35,13 @@ class TrainData:
 
         tempList = []
 
-        for id in range(len(self.idLeaf)):
+        for id in range(1,len(self.idLeaf)):
             tempList.append((data_dir + "/" + str(id) + ".jpg", self.leafClass[id - 1]))
 
         train_data = MonDataset(tempList,
                                 train_transforms)  # datasets.ImageFolder(data_dir, transform=train_transforms)
 
-        train_loader = torch.utils.data.DataLoader(train_data, batch_size=64,
+        train_loader = torch.utils.data.DataLoader(train_data, batch_size=256,
                                                    shuffle=True)  # , collate_fn=self.my_collate_fn)
 
         dataiter = torch.utils.data.DataLoader.__iter__((train_loader))
@@ -84,10 +84,16 @@ class MonDataset(Dataset):
 
     def __getitem__(self, idx):
         image_path, classe = self.liste_tuples[idx]
-        image = Image.open(image_path).convert('RGB')  # Assurez-vous que vos images sont en mode 'RGB'
+        image = Image.open(image_path).convert('L')  # Assurez-vous que vos images sont en mode 'RGB'
+
+        #encodage de la classe :
+        Allclass = set([self.liste_tuples[i][1] for i in range(len(self.liste_tuples))])
+        encoded_tensor = torch.zeros(len(Allclass))
+        class_index = sorted(Allclass).index(classe)
+        encoded_tensor[class_index] = 1
 
         # Appliquer des transformations si spécifiées
         if self.transform:
             image = self.transform(image)
 
-        return image, classe
+        return image, encoded_tensor

@@ -1,4 +1,6 @@
 import torch
+from sklearn.model_selection import train_test_split
+
 from Modele.ClassifieurLineaire import *
 from Modele.Perceptron import *
 from Modele.SVM import *
@@ -18,8 +20,22 @@ classifieur = ClassifieurLineaire(net)
 
 dataiter = torch.utils.data.DataLoader.__iter__((train_loader))
 images, labels = dataiter.__next__()
-classifieur.entrainement(images,labels)
 
+X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
+
+classifieur.entrainement(X_train,y_train)
+predictions = [classifieur.prediction(x) for x in X_test]
+print("classe predict = ", predictions)
+# test = torch.tensor(predictions,dtype=torch.float)
+ok  =[]# [classifieur.erreur(labels[0]),torch.zeros(64)[predictions[i]]+=1) for i in range(len(test))]
+for i in range(len(predictions)) :
+    temp = torch.zeros(99)
+    temp[predictions[i]]+=1
+    ok.append(temp)
+
+err = classifieur.erreur(y_test,torch.stack(ok))
+
+print('erreur = ', err)
 # Normalisation des données
 # scaler = StandardScaler()
 # X = scaler.fit_transform(X)

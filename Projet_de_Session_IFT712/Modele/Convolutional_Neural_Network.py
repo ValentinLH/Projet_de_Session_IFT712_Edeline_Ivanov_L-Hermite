@@ -42,7 +42,7 @@ class Net(nn.Module, StrategieClassification):
 
         # convolutional layer 1 & max pool layer 1
         self.layer1 = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=3),
+            nn.Conv2d(1, 16, kernel_size=3),
             nn.MaxPool2d(kernel_size=2))
 
         # convolutional layer 2 & max pool layer 2
@@ -50,7 +50,7 @@ class Net(nn.Module, StrategieClassification):
             nn.Conv2d(16, 32, kernel_size=4),
             nn.MaxPool2d(kernel_size=2))
 
-        self.fc = nn.Linear(32 * 54 * 54, 6)
+        self.fc = nn.Linear(32 * 54 * 54, 99)
 
         #self.model = Net()
 
@@ -95,15 +95,19 @@ class Net(nn.Module, StrategieClassification):
         print('Finished Training')
 
     def prediction(self, x):
-        pass
+        # This function should return the predicted class for input x
+        with torch.no_grad():
+            outputs = self.forward(x)
+            _, predicted = torch.max(outputs,0)
+        return predicted.item()
 
-    
     def parametres(self):
-        pass
-    
+        # This function should return the parameters (weights and biases) of the model
+        return list(self.parameters())
 
     def erreur(self, t, prediction):
-        pass
+        # This function should return the error between the true labels (t) and predicted labels (prediction)
+        return self.criterion(prediction, t)
 
     def afficher(self, x_train, t_train, x_test, t_test):
         pass
