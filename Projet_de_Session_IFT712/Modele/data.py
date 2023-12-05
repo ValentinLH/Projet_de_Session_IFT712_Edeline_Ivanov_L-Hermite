@@ -41,7 +41,7 @@ class TrainData:
         train_data = MonDataset(tempList,
                                 train_transforms)  # datasets.ImageFolder(data_dir, transform=train_transforms)
 
-        train_loader = torch.utils.data.DataLoader(train_data, batch_size=64,
+        train_loader = torch.utils.data.DataLoader(train_data, batch_size=1028,
                                                    shuffle=True)  # , collate_fn=self.my_collate_fn)
 
         dataiter = torch.utils.data.DataLoader.__iter__((train_loader))
