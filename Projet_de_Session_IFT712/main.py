@@ -1,10 +1,16 @@
 import torch
 from sklearn.model_selection import train_test_split
-
+from sklearn.preprocessing import StandardScaler
 from Modele.ClassifieurLineaire import *
 from Modele.Perceptron import *
 from Modele.SVM import *
 from Modele.RandomForest import *
+from Modele.RandomForestAvecACP import *
+from Modele.AdaBoost import *
+from Modele.RechercheHyperparameter.RechercheHyperparameter import *
+from Modele.RechercheHyperparameter.SousEchantillonnageAleatoire import *
+from Modele.RechercheHyperparameter.ValidationCroisee import *
+from Modele.RechercheHyperparameter.BootstrapValidation import *
 from Modele.data import TrainData
 from Modele.Convolutional_Neural_Network import Net
 
@@ -23,9 +29,44 @@ images, labels = dataiter.__next__()
 
 X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
 
-classifieur.entrainement(X_train,y_train)
+
+
+"""
+#strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
+strategie_perceptron = RandomForest()  
+#strategie_perceptron = RandomForestAvecACP()
+classifieur = ClassifieurLineaire(strategie_perceptron)
+"""
+
+#strategie_Adaboost = AdaBoost(n_estimators=200, learning_rate=0.01, random_state=0, algorithm="SAMME.R", max_depth_tree_classifieur=3)
+#classifieur = ClassifieurLineaire(strategie_Adaboost)
+
+
+#Recherche d'hyperparamètres
+#Validation croisée
+"""
+stategie_hyper_parametre = ValidationCroisee(10)
+Recherche = RechercheHyperparameter(stategie_hyper_parametre)
+Recherche.recherche(classifieur, X, y)
+"""
+
+#Sous echantillonnage aléatoire
+'''stategie_hyper_parametre = SousEchantillonnage(10, 0.2)
+Recherche = RechercheHyperparameter(stategie_hyper_parametre)
+Recherche.recherche(classifieur, X, y)'''
+
+
+'''strategie_SVM = SVM(kernel='linear', C=1.0)
+classifieur = ClassifieurLineaire(strategie_SVM)'''
+
+# Entraînez le modèle
+classifieur.entrainement(X_train, y_train)
+
+# Prédiction sur un exemple de test
 predictions = [classifieur.prediction(x) for x in X_test]
 print("classe predict = ", predictions)
+
+#predictions = classifieur.prediction(X_test) 
 
 ok  =[]# [classifieur.erreur(labels[0]),torch.zeros(64)[predictions[i]]+=1) for i in range(len(test))]
 for i in range(len(predictions)) :
@@ -36,6 +77,18 @@ for i in range(len(predictions)) :
 err = classifieur.erreur(y_test,torch.stack(ok))
 
 print('erreur = ', err)
+
+
+
+#precision, rappel, f1, _ = classifieur.evaluer(X_test,y_test)
+
+#print(f'precision: {precision}')
+#print(f'rappel: {rappel}')
+#print(f'f1: {f1}')
+# Calcul de l'erreur
+
+#classifieur.afficher_donnees_et_modele(X_train, y_train,X_test,y_test)
+
 # Normalisation des données
 # scaler = StandardScaler()
 # X = scaler.fit_transform(X)

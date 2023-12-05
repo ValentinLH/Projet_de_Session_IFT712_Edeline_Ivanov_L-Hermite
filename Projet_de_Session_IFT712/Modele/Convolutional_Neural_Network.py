@@ -59,13 +59,15 @@ class Net(nn.Module, StrategieClassification):
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.epochs = 5
+        self.epochs = 1
 
         # Ajoutez des couches Dropout
         self.dropout = nn.Dropout(0.5)
 
 
         self.criterion = nn.CrossEntropyLoss()
+
+        #self.optimizer = optim.SGD(self.parameters(), lr=0.001, momentum=0.9) #on parle sde paramettre du module
         self.optimizer = optim.Adam(self.parameters(), lr=0.001,betas=(0.9,0.99),weight_decay=1e-4) #on parle sde paramettre du module
 
     def forward(self, x):
