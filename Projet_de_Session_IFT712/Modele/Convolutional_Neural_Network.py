@@ -56,7 +56,11 @@ class Net(nn.Module, StrategieClassification):
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.epochs = 2
+        self.epochs = 1
+
+        # Ajoutez des couches Dropout
+        self.dropout = nn.Dropout(0.5)
+
 
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.SGD(self.parameters(), lr=0.001, momentum=0.9) #on parle sde paramettre du module
@@ -67,6 +71,7 @@ class Net(nn.Module, StrategieClassification):
         #out = out.reshape(out.size(0), -1)
         out = out.flatten()
         out = self.fc(out)
+        out = self.dropout(out)
         return out
 
     def entrainer(self, x_train, t_train):
@@ -88,7 +93,7 @@ class Net(nn.Module, StrategieClassification):
 
                 # print statistics
                 running_loss += loss.item()
-                if i % 2000 == 1999:  # print every 2000 mini-batches
+                if i % 2 == 0:  # print every 2000 mini-batches
                     print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
                     running_loss = 0.0
 
