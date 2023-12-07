@@ -3,7 +3,6 @@ from sklearn.ensemble import RandomForestClassifier
 from .ClassifieurLineaire import StrategieClassification
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import tree
 from sklearn.decomposition import PCA
 
 class RandomForestAvecACP(StrategieClassification):
@@ -48,8 +47,8 @@ class RandomForestAvecACP(StrategieClassification):
         """
         if self.random_forest_model is not None:
             # Appliquer l'ACP à la nouvelle donnée et prédire avec le modèle Random Forest
-            x_pca = self.pca.transform([x])
-            return self.random_forest_model.predict(x_pca)[0]
+            x_pca = self.pca.transform(x)
+            return self.random_forest_model.predict(x_pca)
         return 0  # Valeur par défaut si le modèle n'est pas encore entraîné
 
     def erreur(self, t, prediction):

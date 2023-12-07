@@ -1,34 +1,41 @@
-from sklearn.svm import SVC
 from .ClassifieurLineaire import StrategieClassification
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.calibration import LabelEncoder
 from scipy.interpolate import LinearNDInterpolator
 
-class SVM(StrategieClassification):
-    def __init__(self, kernel='linear', C=1.0):
+class AdaBoost(StrategieClassification):
+    def __init__(self, n_estimators=50, learning_rate=0.01, random_state=0, algorithm="SAMME.R", max_depth_tree_classifieur=1):
         """
         Strategie de classification utilisant le svm de scikit-learn.
 
-        :param kernel: specifies the type of kernel to use for the algorithm. Can be linear, poly, rbf, sigmoid or precomputed
-        :param C: regularization parameter
+        :param n_estimators: nombre de modele utilisé
+        :param learning_rate: taus d'apprentissage, correspond au poids donné pour chaque modele 
+        :param random_state: indique le type d'aléatoire donnée pour chaque modèle
+        :param algorithm: type d'algorithme utilisé pour executer AdaBoost, peut être "SAMME" ou "SAMME.R"
+        :param max_depth_tree_classifieur: profondeur de l'arbre de décision utilisé par l'lagorithme
         """
-        self.kernel = kernel
-        self.C = C
-        self.svm_model = None
+
+        self.n_estimators = n_estimators
+        self.learning_rate = learning_rate
+        self.random_state = random_state
+        self.algorithm = algorithm
+        self.max_depth_tree_classifieur = max_depth_tree_classifieur
+        self.adaboost_model = None
 
     def entrainer(self, x_train, t_train):
         """
-        Entraine le modele de classification SVM de scikit-learn.
+        Entraine le modele de classification Ada boost de scikit-learn.
 
         :param x_train: Les donnees d'entraînement.
         :param t_train: Les étiquettes de classe cibles.
         """
-        self.svm_model = SVC(kernel=self.kernel, C=self.C)
-        self.svm_model.fit(x_train, t_train)
-        self.support_vectors = self.svm_model.support_vectors_
-        self.w = self.svm_model.coef_
-        self.w_0 = self.svm_model.intercept_
+        tree_classifier = DecisionTreeClassifier(max_depth=self.max_depth_tree_classifieur)
+        self.adaboost_model = AdaBoostClassifier(tree_classifier, n_estimators=self.n_estimators, learning_rate=self.learning_rate, 
+                                                 random_state=self.random_state, algorithm=self.algorithm)
+        self.adaboost_model.fit(x_train, t_train)
 
     def prediction(self, x):
         """
@@ -37,17 +44,18 @@ class SVM(StrategieClassification):
         :param x: La donnee d'entree à classifier.
         :return: 1 si la classe predite est positive, -1 sinon.
         """
-        if self.svm_model is not None:
-            return self.svm_model.predict(x)
+        if self.adaboost_model is not None:
+            return self.adaboost_model.predict(x)
         return 0
     
     def parametres(self):
         """
         Retourne les parametres du classifieur
 
-        :return: 1
+        :return: dictionnaire composé des parametres associé à leur valeur
         """
-        return self.w_0, self.w
+        return {'n_estimators': self.n_estimators, 'learning_rate': self.learning_rate, 'random_state': self.random_state,
+                'algorithm': self.algorithm, "max_depth_tree_classifieur": self.max_depth_tree_classifieur}
 
     def erreur(self, t, prediction):
         """
@@ -58,7 +66,34 @@ class SVM(StrategieClassification):
         :return: 1 si l'erreur est commise, 0 sinon.
         """
         return 1 if t != prediction else 0
+    
+    def get_hyperparametres(self):
+        '''estimator_liste = np.arange(50, 501, 50, dtype=int)
+        learning_rate_liste = np.array([0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.5])
+        random_state_liste = np.array([0, 1, 5, 10, 20, 50, 75, 100])
+        algorithm_liste = np.array(["SAMME", "SAMME.R"])
+        depth_liste = np.arange(1, 9, 1, dtype=int)'''
 
+        estimator_liste = np.array([50])
+        learning_rate_liste = np.array([0.001])
+        random_state_liste = np.array([75])
+        algorithm_liste = np.array(["SAMME", "SAMME.R"])
+        depth_liste = np.array([5])
+
+        return [estimator_liste,
+                         learning_rate_liste,
+                         random_state_liste,
+                         algorithm_liste,
+                         depth_liste]
+    
+    def set_hyperparametres(self, hyperparametres_list):
+        self.n_estimators = hyperparametres_list[0]
+        self.learning_rate = hyperparametres_list[1]
+        self.random_state = hyperparametres_list[2]
+        self.algorithm = hyperparametres_list[3]
+        self.max_depth_tree_classifieur = hyperparametres_list[4]
+
+    
     def afficher(self, x_train, t_train, x_test, t_test):
         """
         Affiche les données dans un espace à deux dimensions
