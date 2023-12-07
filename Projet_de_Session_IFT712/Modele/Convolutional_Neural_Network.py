@@ -59,7 +59,9 @@ class Net(nn.Module, StrategieClassification):
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.epochs = 1
+        self.epochs = 5
+        
+        self.batch_size = 64
 
         # Ajoutez des couches Dropout
         self.dropout = nn.Dropout(0.5)
@@ -73,32 +75,42 @@ class Net(nn.Module, StrategieClassification):
     def forward(self, x):
         out = self.layer1(x)
         out = self.layer2(out)
-        #out = out.reshape(out.size(0), -1)
-        out = out.flatten()
+        out = out.reshape(out.size(0), -1)
+        #out = out.flatten()
         out = self.fc(out)
         out = self.dropout(out)
         return out
 
     def entrainer(self, x_train, t_train):
+        inputs, labels = x_train, t_train
+
+        # Utiliser DataLoader pour faciliter la gestion des mini-batchs
+        train_dataset = torch.utils.data.TensorDataset(inputs, labels)
+        train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
+
+        
         for epoch in range(self.epochs):  # loop over the dataset multiple times
 
+
             running_loss = 0.0
-            for i in range(len(x_train)):
+            for i, (inputs_batch, labels_batch) in enumerate(train_loader):
+       
+            #for i in range(len(x_train)):
                 # get the inputs; data is a list of [inputs, labels]
-                inputs, labels = x_train[i], t_train[i]
+           
 
                 # zero the parameter gradients
                 self.optimizer.zero_grad()
 
                 # forward + backward + optimize
-                outputs = self.forward(inputs)
-                loss = self.criterion(outputs, labels)
+                outputs = self.forward(inputs_batch)
+                loss = self.criterion(outputs, labels_batch)
                 loss.backward()
                 self.optimizer.step()
 
                 # print statistics
                 running_loss += loss.item()
-                if i % 20 == 0:  # print every 2000 mini-batches
+                if i % 10 == 0:  # print every 2000 mini-batches
                     print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss /20:.5f}')
                     running_loss = 0.0
 
@@ -108,8 +120,8 @@ class Net(nn.Module, StrategieClassification):
         # This function should return the predicted class for input x
         with torch.no_grad():
             outputs = self.forward(x)
-            _, predicted = torch.max(outputs,0)
-        return predicted.item()
+            _, predicted = torch.max(outputs,1)
+        return predicted.tolist()
 
     def parametres(self):
         # This function should return the parameters (weights and biases) of the model

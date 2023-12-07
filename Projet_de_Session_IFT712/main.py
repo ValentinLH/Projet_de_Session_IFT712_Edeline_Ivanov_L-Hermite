@@ -63,11 +63,12 @@ classifieur = ClassifieurLineaire(strategie_SVM)'''
 classifieur.entrainement(X_train, y_train)
 
 # Prédiction sur un exemple de test
-predictions = [classifieur.prediction(x) for x in X_test]
+#predictions = [classifieur.prediction(x) for x in X_test]
+predictions = classifieur.prediction(X_test)
 print("classe predict = ", predictions)
 
 #predictions = classifieur.prediction(X_test) 
-
+"""
 ok  =[]# [classifieur.erreur(labels[0]),torch.zeros(64)[predictions[i]]+=1) for i in range(len(test))]
 for i in range(len(predictions)) :
     temp = torch.zeros(99)
@@ -77,7 +78,29 @@ for i in range(len(predictions)) :
 err = classifieur.erreur(y_test,torch.stack(ok))
 
 print('erreur = ', err)
+"""
+_, y_test_pred = torch.max(y_test, 1)
+y_test_pred_list = y_test_pred.tolist()
 
+_, y_train_pred = torch.max(y_train, 1)
+y_train_pred_list = y_train_pred.tolist()
+
+
+precision, rappel, f1, _ = classifieur.evaluer(X_train, y_train_pred_list)
+
+print(f'Metrique entrainement : ')
+print(f'precision: {precision}')
+print(f'rappel: {rappel}')
+print(f'f1: {f1}')
+
+precision, rappel, f1, _ = classifieur.evaluer(X_test,y_test_pred_list)
+
+print(f'\n\n########\nMetrique Test : ')
+print(f'precision: {precision}')
+print(f'rappel: {rappel}')
+print(f'f1: {f1}')
+
+#classifieur.afficher_donnees_et_modele(X_train, y_train_pred_list,X_test,y_test_pred_list)
 
 
 #precision, rappel, f1, _ = classifieur.evaluer(X_test,y_test)
@@ -126,4 +149,3 @@ print('erreur = ', err)
 # print("Erreur de classification :", erreur)
 #
 #
-# classifieur.afficher_donnees_et_modele(X_train, y_train,X_test,y_test)
