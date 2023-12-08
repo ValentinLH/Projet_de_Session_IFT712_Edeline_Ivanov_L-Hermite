@@ -10,28 +10,6 @@ import torch.optim as optim
 
 
 
-"""
-####################################################################
-
-Net est une classe hybride, il y avais une récursion self.model = Net()
-car tout les Net() appellait dans leur constructeur Net()
-
-ensuite
-on a plein de maniere de l'implementé
-
-on peut faire un modele "complet" CNN ne marchant qu'avec torch et 
-notre classe encapsulerais celle ci avec la structure de la stratégie et des sanity checks
-
-ou on peut faire un module incestueux combinant les deux, nous allons en reparler dans un futur proche
-
-Bisous
-
-
-
-
-
-####################################################################
-"""
 
 
 class Net(nn.Module, StrategieClassification):
@@ -43,7 +21,9 @@ class Net(nn.Module, StrategieClassification):
         # convolutional layer 1 & max pool layer 1
         self.layer1 = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=3),
-            nn.MaxPool2d(kernel_size=2))
+            nn.ReLU()#,
+            #nn.MaxPool2d(kernel_size=2)
+            )
 
         # convolutional layer 2 & max pool layer 2
         self.layer2 = nn.Sequential(
@@ -56,12 +36,13 @@ class Net(nn.Module, StrategieClassification):
 
         self.prelu = nn.PReLU()
         self.fc = nn.Linear(32 * 54 * 54, 99)
+        self.fc = nn.Linear(387168, 99)
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.epochs = 5
+        self.epochs = 10
         
-        self.batch_size = 64
+        self.batch_size = 16
 
         # Ajoutez des couches Dropout
         self.dropout = nn.Dropout(0.5)
@@ -70,7 +51,7 @@ class Net(nn.Module, StrategieClassification):
         self.criterion = nn.CrossEntropyLoss()
 
         #self.optimizer = optim.SGD(self.parameters(), lr=0.001, momentum=0.9) #on parle sde paramettre du module
-        self.optimizer = optim.Adam(self.parameters(), lr=0.001,betas=(0.9,0.99),weight_decay=1e-4) #on parle sde paramettre du module
+        self.optimizer = optim.Adam(self.parameters(), lr=0.01,betas=(0.9,0.99),weight_decay=1e-4) #on parle sde paramettre du module
 
     def forward(self, x):
         out = self.layer1(x)
@@ -111,7 +92,7 @@ class Net(nn.Module, StrategieClassification):
                 # print statistics
                 running_loss += loss.item()
                 if i % 10 == 0:  # print every 2000 mini-batches
-                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss /20:.5f}')
+                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss /10:.5f}')
                     running_loss = 0.0
 
         print('Finished Training')

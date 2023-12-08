@@ -27,6 +27,26 @@ classifieur = ClassifieurLineaire(net)
 dataiter = torch.utils.data.DataLoader.__iter__((train_loader))
 images, labels = dataiter.__next__()
 
+X_original = torch.from_numpy(X[1:].astype(np.float32))  # Convertit en tenseur PyTorch
+
+# Créez une matrice de zéros avec la forme souhaitée (989, 224 - 192)
+zeros_matrix = torch.zeros(X_original.size(0), images.size()[3] - X_original.size(1))
+
+# Concaténez la matrice originale et la matrice de zéros le long de la deuxième dimension
+X_resized = torch.cat([X_original, zeros_matrix], dim=1)
+
+
+X_resized = X_resized.unsqueeze(1)
+
+# Concaténez X_resized à images le long de la dernière dimension
+images = torch.cat([images, X_resized.unsqueeze(-1)], dim=3)
+images = torch.cat([images, X_resized.unsqueeze(-1)], dim=3)
+images = torch.cat([images, X_resized.unsqueeze(-1)], dim=3)
+images = torch.cat([images, X_resized.unsqueeze(-1)], dim=3)
+
+
+
+
 X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
 
 
