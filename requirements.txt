@@ -13,3 +13,4 @@ scipy
 pandas
 virtualenv
 tqdm
+torch

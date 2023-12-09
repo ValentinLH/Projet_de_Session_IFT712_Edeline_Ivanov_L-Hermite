@@ -43,23 +43,27 @@ class Net(nn.Module, StrategieClassification):
         # convolutional layer 1 & max pool layer 1
         self.layer1 = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=3),
-            nn.MaxPool2d(kernel_size=2))
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2,stride=2))
 
         # convolutional layer 2 & max pool layer 2
         self.layer2 = nn.Sequential(
             nn.Conv2d(16, 32, kernel_size=4),
-            nn.MaxPool2d(kernel_size=2))
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2,stride=2))
 
         # self.layer3 = nn.Sequential(
         #     nn.Conv2d(32, 64, kernel_size=3),
         #     nn.MaxPool2d(kernel_size=2))
 
-        self.prelu = nn.PReLU()
-        self.fc = nn.Linear(32 * 54 * 54, 99)
+        #self.prelu = nn.PReLU()
+        self.fc = nn.Sequential( nn.Linear(32 * 54 * 54, 99),
+                                 nn.Softmax(dim=1)
+        )
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.epochs = 5
+        self.epochs = 15
         
         self.batch_size = 64
 
