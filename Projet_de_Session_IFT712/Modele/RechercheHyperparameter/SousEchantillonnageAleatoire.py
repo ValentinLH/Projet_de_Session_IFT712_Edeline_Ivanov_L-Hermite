@@ -27,6 +27,12 @@ class SousEchantillonnage(StrategyRechercheHyperparameter):
         #Récupération des hyperparamètres du modèle
         hyperparametres = modele.get_hyperparametres()
 
+        nbr_iterations = np.prod([len(i) for i in hyperparametres])
+        compteur = 1
+
+        print("########################## Début de la recherche ##########################")
+        print("Il y aura ", nbr_iterations, " iterations")
+
         #Création d'une instance contenant toutes les suites d'hyperparamètres possibles
         hyperparameters_combinaisons = product(*hyperparametres)
 
@@ -38,6 +44,11 @@ class SousEchantillonnage(StrategyRechercheHyperparameter):
         for parametres in (first_line, *hyperparameters_combinaisons):
 
             precision_total = 0.0
+
+            compteur += 1
+
+            if (compteur%10 == 0):
+                print("iterations ", compteur, " sur ", nbr_iterations)
 
             for j in range(self.k):
 
@@ -60,5 +71,10 @@ class SousEchantillonnage(StrategyRechercheHyperparameter):
             if (precision_moyenne > meilleur_precision):
                 meilleur_precision = precision_moyenne
                 meilleur_hyperparametres = parametres
+                print("iterations ", compteur, " sur ", nbr_iterations)
+                print("precision amélioré: ", meilleur_precision, "\tavec ces parammètres: ", meilleur_hyperparametres)
         
+        print("########################## Fin de la recherche ##########################")
+        print("meilleur hyperparametres: ", meilleur_hyperparametres)
+        print("precisin trouvée: ", meilleur_precision)
         modele.set_hyperparametres(meilleur_hyperparametres)

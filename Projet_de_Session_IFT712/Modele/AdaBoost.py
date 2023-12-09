@@ -68,17 +68,12 @@ class AdaBoost(StrategieClassification):
         return 1 if t != prediction else 0
     
     def get_hyperparametres(self):
-        '''estimator_liste = np.arange(50, 501, 50, dtype=int)
-        learning_rate_liste = np.array([0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.5])
-        random_state_liste = np.array([0, 1, 5, 10, 20, 50, 75, 100])
-        algorithm_liste = np.array(["SAMME", "SAMME.R"])
-        depth_liste = np.arange(1, 9, 1, dtype=int)'''
 
-        estimator_liste = np.array([50])
-        learning_rate_liste = np.array([0.001])
-        random_state_liste = np.array([75])
+        estimator_liste = np.arange(200, 601, 200, dtype=int)
+        learning_rate_liste = np.array([0.01, 0.001])
+        random_state_liste = np.array([75, 12])
         algorithm_liste = np.array(["SAMME", "SAMME.R"])
-        depth_liste = np.array([5])
+        depth_liste = np.array([3, 4, 5])
 
         return [estimator_liste,
                          learning_rate_liste,
