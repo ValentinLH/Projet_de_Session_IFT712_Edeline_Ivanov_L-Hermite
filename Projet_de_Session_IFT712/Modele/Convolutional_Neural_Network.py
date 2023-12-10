@@ -56,8 +56,8 @@ class Convolutional_Neural_Network(StrategieClassification):
         Met à jour les valeurs des hyperparamètres
         :param hyperparametres_list: liste contenant les nouvelles valeurs des hyperparamètres
         """
-        self.learning_rate_liste = hyperparametres_list[0]
-        self.drop_out_liste = hyperparametres_list[1]
-        self.epoch_liste = hyperparametres_list[2]
-        self.taille_du_batch_liste = hyperparametres_list[3]
+        self.lr = hyperparametres_list[0]
+        self.dropout = hyperparametres_list[1]
+        self.epochs = hyperparametres_list[2]
+        self.batch_size = hyperparametres_list[3]
 
