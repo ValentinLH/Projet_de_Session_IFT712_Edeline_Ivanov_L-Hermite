@@ -16,7 +16,7 @@ from sklearn.metrics import accuracy_score
 from Projet_de_Session_IFT712.Modele.Reseaux_de_Neurone import Reseaux_Neurones
 
 # Charger un jeu de données pour l'exemple (Leaf dataset)
-trainData = TrainData("../leaf-classification/train.csv")
+trainData = TrainData("leaf-classification/train.csv")
 X, y = trainData.data, trainData.leafClass
 
 
@@ -30,23 +30,36 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 #strategie_perceptron = Perceptron(learning_rate=0.01, max_iterations=1000)
 #strategie_perceptron = RandomForest()
 #strategie_perceptron = RandomForestAvecACP()
-strategie_RN = Reseaux_Neurones((64,48,64))
+strategie_RN = Reseaux_Neurones((64,64))#, learning_rate="adaptive", learning_rate_init=0.25075, max_iter=600, activation="tanh", solver="sgd")
 classifieur = ClassifieurLineaire(strategie_RN)
 
-'''strategie_SVM = SVM(kernel='linear', C=1.0)
-classifieur = ClassifieurLineaire(strategie_SVM)'''
+''' strategie_SVM = SVM(kernel='linear', C=1.0)
+classifieur = ClassifieurLineaire(strategie_SVM) '''
+
+
+#Ensemble de valdation pour voir les meilleur paramtres manuellement
+
+#X_train_validation, X_validation, y_train_validation, y_validation =  train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+
+
+
+#######################################################################################################
+# strategie_recherche = ValidationCroisee(k = 5)
+#
+# #Recherche d'Hyperparametre
+# recherche = RechercheHyperparameter(strategie_recherche)
+#
+# #Recherche des hyperparamètres
+# recherche.recherche(classifieur, X_train, y_train)
 
 # Entraînez le modèle
 classifieur.entrainement(X_train, y_train)
 
-# Prédiction sur un exemple de test
-exemple_test = X_test[0]
-prediction = classifieur.prediction(exemple_test)
 
-predictions = [classifieur.prediction(x) for x in X_test]
+prediction = classifieur.prediction(X_test) #[classifieur.prediction(x) for x in X_test]
 
 # Calculate accuracy
-accuracy = accuracy_score(y_test, predictions)
+accuracy = accuracy_score(y_test, prediction)
 
 # Print or use the accuracy as needed
 print(f'Accuracy: {accuracy}')
@@ -58,9 +71,10 @@ precision, rappel, f1, _ = classifieur.evaluer(X_test,y_test)
 print(f'precision: {precision}')
 print(f'rappel: {rappel}')
 print(f'f1: {f1}')
-# Calcul de l'erreur
-erreur = classifieur.erreur(y_test[0], prediction)
-print("Erreur de classification :", erreur)
+
+# # Calcul de l'erreur
+# erreur = classifieur.erreur(y_test, prediction)
+# print("Erreur de classification :", erreur)
 
 
 classifieur.afficher_donnees_et_modele(X_train, y_train,X_test,y_test)
