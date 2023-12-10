@@ -2,9 +2,6 @@ from .ClassifieurLineaire import StrategieClassification
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.calibration import LabelEncoder
-from scipy.interpolate import LinearNDInterpolator
 
 class AdaBoost(StrategieClassification):
     def __init__(self, n_estimators=50, learning_rate=0.01, random_state=0, algorithm="SAMME.R", max_depth_tree_classifieur=1):

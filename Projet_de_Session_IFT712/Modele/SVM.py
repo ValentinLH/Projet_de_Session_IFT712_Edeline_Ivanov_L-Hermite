@@ -1,9 +1,6 @@
 from sklearn.svm import SVC
 from .ClassifieurLineaire import StrategieClassification
 import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.calibration import LabelEncoder
-from scipy.interpolate import LinearNDInterpolator
 
 class SVM(StrategieClassification):
     def __init__(self, kernel='linear', C=1.0):
