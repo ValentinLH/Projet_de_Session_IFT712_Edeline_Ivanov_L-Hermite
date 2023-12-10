@@ -1,4 +1,3 @@
-
 from Modele.ClassifieurLineaire import StrategieClassification
 
 import torch
@@ -57,6 +56,7 @@ class Net(nn.Module, StrategieClassification):
         return out
 
     def entrainer(self, x_train, t_train):
+        
         inputs, labels = x_train, t_train
 
         # Utiliser DataLoader pour faciliter la gestion des mini-batchs
@@ -103,7 +103,4 @@ class Net(nn.Module, StrategieClassification):
 
     def afficher(self, x_train, t_train, x_test, t_test):
         pass
-
-
-
 
