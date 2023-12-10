@@ -35,12 +35,12 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
         #Création d'une instance contenant toutes les suites d'hyperparamètres possibles
         hyperparameters_combinaisons = product(*hyperparametres)
 
-        first_line = next(hyperparameters_combinaisons)
+        premiere_ligne = next(hyperparameters_combinaisons)
 
         meilleur_precision = 0.0
-        meilleur_hyperparametres = first_line
+        meilleur_hyperparametres = premiere_ligne
 
-        for parametres in (first_line, *hyperparameters_combinaisons):
+        for parametres in (premiere_ligne, *hyperparameters_combinaisons):
 
             precision_total = 0.0
             
@@ -69,7 +69,7 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
                 meilleur_precision = precision_moyenne
                 meilleur_hyperparametres = parametres
                 print("iterations ", compteur, " sur ", nbr_iterations)
-                print("precision amélioré: ", meilleur_precision, "\tavec ces parammètres: ", meilleur_hyperparametres)
+                print("precision amélioré: ", meilleur_precision, "\tavec ces paramètres: ", meilleur_hyperparametres)
 
         print("########################## Fin de la recherche ##########################")
         print("meilleur hyperparametres: ", meilleur_hyperparametres)

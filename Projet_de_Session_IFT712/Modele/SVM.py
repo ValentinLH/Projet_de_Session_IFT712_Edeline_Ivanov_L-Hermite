@@ -15,7 +15,7 @@ class SVM(StrategieClassification):
         """
         self.kernel = kernel
         self.C = C
-        self.svm_model = None
+        self.svm_modele = None
 
     def entrainer(self, x_train, t_train):
         """
@@ -24,11 +24,12 @@ class SVM(StrategieClassification):
         :param x_train: Les donnees d'entraînement.
         :param t_train: Les étiquettes de classe cibles.
         """
-        self.svm_model = SVC(kernel=self.kernel, C=self.C)
-        self.svm_model.fit(x_train, t_train)
-        self.support_vectors = self.svm_model.support_vectors_
-        self.w = self.svm_model.coef_
-        self.w_0 = self.svm_model.intercept_
+        self.svm_modele = SVC(kernel=self.kernel, C=self.C)
+        self.svm_modele.fit(x_train, t_train)
+        self.support_vecteurs = self.svm_modele.support_vectors_
+        if (self.kernel == "linear"):
+            self.w = self.svm_modele.coef_
+            self.w_0 = self.svm_modele.intercept_
 
     def prediction(self, x):
         """
@@ -37,8 +38,8 @@ class SVM(StrategieClassification):
         :param x: La donnee d'entree à classifier.
         :return: 1 si la classe predite est positive, -1 sinon.
         """
-        if self.svm_model is not None:
-            return self.svm_model.predict(x)
+        if self.svm_modele is not None:
+            return self.svm_modele.predict(x)
         return 0
     
     def parametres(self):
@@ -59,6 +60,27 @@ class SVM(StrategieClassification):
         """
         return 1 if t != prediction else 0
 
+    def get_hyperparametres(self):
+        """
+        Renvoie une liste de valeurs que peuvent prendre les hyperparamètres
+
+        :return: Une liste contenant un ensemble de valeur possible pour chaque hyperparamètres
+        """
+        C_liste = np.array([0.001, 0.01, 0.1, 1, 10, 100, 1000])
+        noyau_liste = np.array(["linear", "poly", "rbf"])
+
+        return [C_liste, noyau_liste]
+
+        
+    def set_hyperparametres(self, hyperparametres_list):
+        """
+        Met à jour les valeurs des hyperparamètres
+
+        :param hyperparametres_list: liste contenant les nouvelles valeurs des hyperparamètres
+        """
+        self.C = hyperparametres_list[0]
+        self.kernel = hyperparametres_list[1]
+
     def afficher(self, x_train, t_train, x_test, t_test):
         """
         Affiche les données dans un espace à deux dimensions
@@ -70,8 +92,8 @@ class SVM(StrategieClassification):
         """
 
         le = LabelEncoder()
-        t_train_encoded = le.fit_transform(t_train)
-        t_test_encoded = le.transform(t_test)
+        t_train_encode = le.fit_transform(t_train)
+        t_test_encode = le.transform(t_test)
 
         h = 0.05
         x_min, x_max = x_train[:, 0].min() - .5, x_train[:, 0].max() + .5
@@ -83,13 +105,13 @@ class SVM(StrategieClassification):
         values = x_train[:,2:]
         
         interpolator = LinearNDInterpolator(points, values)
-        grid_xy = np.c_[xx.ravel(), yy.ravel()]
-        grid_dim = interpolator(grid_xy)
-        grid_tot = np.c_[grid_xy,grid_dim]
-        grid_tot[np.isnan(grid_tot)] = 0
-        grid_z = self.svm_model.predict(grid_tot)
+        grille_xy = np.c_[xx.ravel(), yy.ravel()]
+        grille_dim = interpolator(grille_xy)
+        grille_tot = np.c_[grille_xy,grille_dim]
+        grille_tot[np.isnan(grille_tot)] = 0
+        grille_z = self.svm_modele.predict(grille_tot)
         
-        Z = le.transform(grid_z)
+        Z = le.transform(grille_z)
         # Remettre les resultats en forme pour le trace
         Z = Z.reshape(xx.shape) 
 
@@ -97,7 +119,7 @@ class SVM(StrategieClassification):
 
         plt.figure(figsize=(14, 8))
         plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
-        plt.scatter(x_train[:, 0], x_train[:, 1], c=t_train_encoded, edgecolors='k', cmap=plt.cm.Paired)
+        plt.scatter(x_train[:, 0], x_train[:, 1], c=t_train_encode, edgecolors='k', cmap=plt.cm.Paired)
         plt.xlim(xx.min(), xx.max())
         plt.ylim(yy.min(), yy.max())
         plt.xticks(())
@@ -115,13 +137,13 @@ class SVM(StrategieClassification):
         values = x_test[:,2:]
         
         interpolator = LinearNDInterpolator(points, values)
-        grid_xy = np.c_[xx.ravel(), yy.ravel()]
-        grid_dim = interpolator(grid_xy)
-        grid_tot = np.c_[grid_xy,grid_dim]
-        grid_tot[np.isnan(grid_tot)] = 0
-        grid_z = self.svm_model.predict(grid_tot)
+        grille_xy = np.c_[xx.ravel(), yy.ravel()]
+        grille_dim = interpolator(grille_xy)
+        grille_tot = np.c_[grille_xy,grille_dim]
+        grille_tot[np.isnan(grille_tot)] = 0
+        grille_z = self.svm_modele.predict(grille_tot)
         
-        Z = le.transform(grid_z)
+        Z = le.transform(grille_z)
         # Remettre les resultats en forme pour le trace
         Z = Z.reshape(xx.shape)
 
@@ -130,7 +152,7 @@ class SVM(StrategieClassification):
         plt.figure(figsize=(14, 8))
         plt.close(0)
         plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
-        plt.scatter(x_test[:, 0], x_test[:, 1], c=t_test_encoded, edgecolors='k', cmap=plt.cm.Paired)
+        plt.scatter(x_test[:, 0], x_test[:, 1], c=t_test_encode, edgecolors='k', cmap=plt.cm.Paired)
         plt.xlim(xx.min(), xx.max())
         plt.ylim(yy.min(), yy.max())
         plt.xticks(())
