@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+
 class Net(nn.Module):
     def __init__(self, lr=0.001, epochs=15, batch_size=64, dropout=0.5):
         super().__init__()

@@ -2,7 +2,7 @@ from Modele.ClassifieurLineaire import StrategieClassification
 
 import torch
 import numpy as np
-from Projet_de_Session_IFT712.Modele.Net import Net
+from Modele.Net import Net
 
 class Convolutional_Neural_Network(StrategieClassification):
     def __init__(self,lr=0.001, epochs=15, batch_size=64, dropout=0.5):
@@ -59,5 +59,5 @@ class Convolutional_Neural_Network(StrategieClassification):
         self.lr = hyperparametres_list[0]
         self.dropout = hyperparametres_list[1]
         self.epochs = hyperparametres_list[2]
-        self.batch_size = hyperparametres_list[3]
+        self.batch_size = int(hyperparametres_list[3])
 

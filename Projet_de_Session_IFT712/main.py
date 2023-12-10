@@ -20,9 +20,6 @@ from Modele.Reseaux_de_Neurone import Reseaux_Neurones
 trainData = TrainData("leaf-classification/train.csv")
 X, y = trainData.data, trainData.leafClass
 
-train_loader = trainData.read_image()
-trainData.imshow()
-
 net = Convolutional_Neural_Network()
 classifieur = ClassifieurLineaire(net)
 
@@ -73,6 +70,7 @@ classifieur = ClassifieurLineaire(strategie_SVM) '''
 #Ensemble de valdation pour voir les meilleur paramtres manuellement
 
 #X_train_validation, X_validation, y_train_validation, y_validation =  train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+
 
 
 
