@@ -14,7 +14,7 @@ from Modele.RechercheHyperparameter.BootstrapValidation import *
 from Modele.data import TrainData
 from Modele.Convolutional_Neural_Network import Net
 
-from Projet_de_Session_IFT712.Modele.Reseaux_de_Neurone import Reseaux_Neurones
+from Modele.Reseaux_de_Neurone import Reseaux_Neurones
 
 # Charger un jeu de données pour l'exemple (Leaf dataset)
 trainData = TrainData("leaf-classification/train.csv")
@@ -32,6 +32,9 @@ classifieur = ClassifieurLineaire(net)
 #
 # # Diviser les données en ensembles d'entraînement et de test
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+train_loader = trainData.read_image()
+trainData.imshow()
 
 dataiter = torch.utils.data.DataLoader.__iter__((train_loader))
 images, labels = dataiter.__next__()
