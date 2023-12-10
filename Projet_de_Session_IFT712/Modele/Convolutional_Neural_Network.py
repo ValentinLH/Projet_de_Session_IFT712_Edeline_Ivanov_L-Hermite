@@ -1,11 +1,11 @@
 from Modele.ClassifieurLineaire import StrategieClassification
 
-import torch
 import numpy as np
 from Modele.Net import Net
 
+
 class Convolutional_Neural_Network(StrategieClassification):
-    def __init__(self,lr=0.001, epochs=15, batch_size=64, dropout=0.5):
+    def __init__(self, lr=0.001, epochs=15, batch_size=64, dropout=0.5):
         """
         :param lr: la valeur du pas d'apprentissage
         :param epochs: le nombre d'epochs realiser lors de l'entrainement
@@ -48,8 +48,7 @@ class Convolutional_Neural_Network(StrategieClassification):
         epoch_liste = np.linspace(1, 15, 10).astype(int)
         taille_du_batch_liste = np.linspace(64, 128, 5).astype(int)
 
-        return [learning_rate_liste, drop_out_liste, epoch_liste,taille_du_batch_liste]
-
+        return [learning_rate_liste, drop_out_liste, epoch_liste, taille_du_batch_liste]
 
     def set_hyperparametres(self, hyperparametres_list):
         """
@@ -60,4 +59,3 @@ class Convolutional_Neural_Network(StrategieClassification):
         self.dropout = hyperparametres_list[1]
         self.epochs = hyperparametres_list[2]
         self.batch_size = int(hyperparametres_list[3])
-

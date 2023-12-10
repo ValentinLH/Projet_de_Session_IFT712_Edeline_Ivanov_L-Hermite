@@ -2,9 +2,8 @@ import pandas as pd
 import torch
 from PIL import Image
 from matplotlib import pyplot as plt
-from torchvision import datasets, transforms
+from torchvision import transforms
 from torch.utils.data import Dataset
-from sklearn.preprocessing import LabelEncoder
 
 
 class TrainData:
@@ -30,12 +29,12 @@ class TrainData:
     def read_image(self,
                    data_dir=r"leaf-classification\\images"):
         train_transforms = transforms.Compose([
-            transforms.Resize((224,224)),
+            transforms.Resize((224, 224)),
             transforms.ToTensor()])
 
         tempList = []
 
-        for id in range(1,len(self.idLeaf)):
+        for id in range(1, len(self.idLeaf)):
             tempList.append((data_dir + "/" + str(id) + ".jpg", self.leafClass[id - 1]))
 
         train_data = MonDataset(tempList,
@@ -86,7 +85,7 @@ class MonDataset(Dataset):
         image_path, classe = self.liste_tuples[idx]
         image = Image.open(image_path).convert('L')  # Assurez-vous que vos images sont en mode 'RGB'
 
-        #encodage de la classe :
+        # encodage de la classe :
         Allclass = set([self.liste_tuples[i][1] for i in range(len(self.liste_tuples))])
         encoded_tensor = torch.zeros(len(Allclass))
         class_index = sorted(Allclass).index(classe)

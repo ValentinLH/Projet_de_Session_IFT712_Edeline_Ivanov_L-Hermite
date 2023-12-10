@@ -3,8 +3,10 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 
+
 class AdaBoost(StrategieClassification):
-    def __init__(self, n_estimators=50, learning_rate=0.01, random_state=0, algorithm="SAMME.R", max_depth_tree_classifieur=1):
+    def __init__(self, n_estimators=50, learning_rate=0.01, random_state=0, algorithm="SAMME.R",
+                 max_depth_tree_classifieur=1):
         """
         Strategie de classification utilisant le svm de scikit-learn.
 
@@ -30,8 +32,9 @@ class AdaBoost(StrategieClassification):
         :param t_train: Les étiquettes de classe cibles.
         """
         tree_classifier = DecisionTreeClassifier(max_depth=self.max_depth_tree_classifieur)
-        self.adaboost_modele = AdaBoostClassifier(tree_classifier, n_estimators=self.n_estimators, learning_rate=self.learning_rate, 
-                                                 random_state=self.random_state, algorithm=self.algorithm)
+        self.adaboost_modele = AdaBoostClassifier(tree_classifier, n_estimators=self.n_estimators,
+                                                  learning_rate=self.learning_rate,
+                                                  random_state=self.random_state, algorithm=self.algorithm)
         self.adaboost_modele.fit(x_train, t_train)
 
     def prediction(self, x):
@@ -44,14 +47,15 @@ class AdaBoost(StrategieClassification):
         if self.adaboost_modele is not None:
             return self.adaboost_modele.predict(x)
         return 0
-    
+
     def parametres(self):
         """
         Retourne les parametres du classifieur
 
         :return: dictionnaire composé des parametres associé à leur valeur
         """
-        return {'n_estimators': self.n_estimators, 'learning_rate': self.learning_rate, 'random_state': self.random_state,
+        return {'n_estimators': self.n_estimators, 'learning_rate': self.learning_rate,
+                'random_state': self.random_state,
                 'algorithm': self.algorithm, "max_depth_tree_classifieur": self.max_depth_tree_classifieur}
 
     def erreur(self, t, prediction):
@@ -63,7 +67,7 @@ class AdaBoost(StrategieClassification):
         :return: 1 si l'erreur est commise, 0 sinon.
         """
         return 1 if t != prediction else 0
-    
+
     def get_hyperparametres(self):
         """
         Renvoie une liste de valeurs que peuvent prendre les hyperparamètres
@@ -77,11 +81,11 @@ class AdaBoost(StrategieClassification):
         depth_liste = np.array([3, 4, 5])
 
         return [estimator_liste,
-                         learning_rate_liste,
-                         random_state_liste,
-                         algorithm_liste,
-                         depth_liste]
-    
+                learning_rate_liste,
+                random_state_liste,
+                algorithm_liste,
+                depth_liste]
+
     def set_hyperparametres(self, hyperparametres_list):
         """
         Met à jour les valeurs des hyperparamètres

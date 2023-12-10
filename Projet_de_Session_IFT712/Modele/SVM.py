@@ -2,13 +2,14 @@ from sklearn.svm import SVC
 from .ClassifieurLineaire import StrategieClassification
 import numpy as np
 
+
 class SVM(StrategieClassification):
     def __init__(self, kernel='linear', C=1.0):
         """
         Strategie de classification utilisant le svm de scikit-learn.
 
-        :param kernel: specifies the type of kernel to use for the algorithm. Can be linear, poly, rbf, sigmoid or precomputed
-        :param C: regularization parameter
+        :param kernel: Le type du kernel pour l'algorithme.Peut etre "linear", "poly", "rbf", "sigmoid" ou "precomputed"
+        :param C: parametre de regularisation
         """
         self.kernel = kernel
         self.C = C
@@ -38,7 +39,7 @@ class SVM(StrategieClassification):
         if self.svm_modele is not None:
             return self.svm_modele.predict(x)
         return 0
-    
+
     def parametres(self):
         """
         Retourne les parametres du classifieur

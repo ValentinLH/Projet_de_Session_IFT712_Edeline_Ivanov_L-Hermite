@@ -5,8 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import tree
 
+
 class RandomForest(StrategieClassification):
-    def __init__(self, n_estimators=100, criterion= "gini", max_depth=None, random_state=None):
+    def __init__(self, n_estimators=100, criterion="gini", max_depth=None, random_state=None):
         """
         Stratégie de classification utilisant un modèle Random Forest de scikit-learn.
 
@@ -27,7 +28,8 @@ class RandomForest(StrategieClassification):
         :param x_train: Les données d'entraînement.
         :param t_train: Les étiquettes de classe cibles.
         """
-        self.random_forest_model = RandomForestClassifier(criterion=self.criterion,n_estimators=self.n_estimators, max_depth=self.max_depth, random_state=self.random_state)
+        self.random_forest_model = RandomForestClassifier(criterion=self.criterion, n_estimators=self.n_estimators,
+                                                          max_depth=self.max_depth, random_state=self.random_state)
         self.random_forest_model.fit(x_train, t_train)
 
     def prediction(self, x):
@@ -61,7 +63,6 @@ class RandomForest(StrategieClassification):
             'random_state': self.random_state
         }
 
-    
     def afficher(self, x_train, t_train, x_test, t_test, feature_names=None, class_names=None):
         """
         Affiche les résultats de classification pour le modèle Random Forest.
@@ -76,7 +77,9 @@ class RandomForest(StrategieClassification):
         # Si les noms de caractéristiques ne sont pas fournis, utilisez des noms génériques.
         if not feature_names:
             feature_names = [f'Feature {i}' for i in range(x_train.shape[1])]
-        # Si les noms de classe ne sont pas fournis, utilisez des noms génériques basés sur les étiquettes d'entraînement.
+
+        # Si les noms de classe ne sont pas fournis,
+        # utilisez des noms génériques basés sur les étiquettes d'entraînement.
         if not class_names:
             class_names = [f'Class {i}' for i in range(len(np.unique(t_train)))]
 
@@ -98,9 +101,10 @@ class RandomForest(StrategieClassification):
         # Affichage des données d'entraînement
         plt.figure(figsize=(12, 5))
         plt.subplot(1, 2, 1)
-        plt.scatter(x_train_subset[:, 0], x_train_subset[:, 1], c=t_train_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
+        plt.scatter(x_train_subset[:, 0], x_train_subset[:, 1], c=t_train_encoded, cmap=plt.cm.Paired, edgecolor='k',
+                    s=20)
         plt.title('Training Data')
-                
+
         t_test_encoded = le.fit_transform(t_test)
 
         # Affichage des données de test
@@ -117,14 +121,13 @@ class RandomForest(StrategieClassification):
 
         :return: Une liste contenant un ensemble de valeur possible pour chaque hyperparamètres
         """
-        n_estimators_liste = np.linspace(70, 150, 10).astype(int) 
-        criterion_liste = np.array(["gini","log_loss","entropy"])
-        
-        
-        return [ n_estimators_liste,
-                 criterion_liste,
+        n_estimators_liste = np.linspace(70, 150, 10).astype(int)
+        criterion_liste = np.array(["gini", "log_loss", "entropy"])
+
+        return [n_estimators_liste,
+                criterion_liste,
                 ]
-    
+
     def set_hyperparametres(self, hyperparametres_list):
         """
         Met à jour les valeurs des hyperparamètres
@@ -132,8 +135,4 @@ class RandomForest(StrategieClassification):
         :param hyperparametres_list: liste contenant les nouvelles valeurs des hyperparamètres
         """
         self.n_estimators = hyperparametres_list[0]
-        self.criterion  = hyperparametres_list[1]
-        
-
-
-
+        self.criterion = hyperparametres_list[1]
