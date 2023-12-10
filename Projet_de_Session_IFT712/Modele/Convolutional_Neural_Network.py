@@ -1,106 +1,63 @@
 from Modele.ClassifieurLineaire import StrategieClassification
 
 import torch
-import torchvision
-import torchvision.transforms as transforms
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
+import numpy as np
+from Modele.Net import Net
 
+class Convolutional_Neural_Network(StrategieClassification):
+    def __init__(self,lr=0.001, epochs=15, batch_size=64, dropout=0.5):
+        """
+        :param lr: la valeur du pas d'apprentissage
+        :param epochs: le nombre d'epochs realiser lors de l'entrainement
+        :param batch_size: la taille du batch utiliser pour l'entrainement
+        :param dropout: la valeur du DropOut
+        """
 
-class Net(nn.Module, StrategieClassification):
-    def __init__(self, lr=0.001, epochs = 15, batch_size = 64, dropout = 0.5 ):
-        super().__init__()
-
-        #L'explication des choix pour les valeur des
-
-        # convolutional layer 1 & max pool layer 1
-        self.layer1 = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=3),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2,stride=2))
-
-        # convolutional layer 2 & max pool layer 2
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(16, 32, kernel_size=4),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2,stride=2))
-
-        self.fc = nn.Sequential( nn.Linear(32 * 54 * 54, 99),
-                                 nn.Softmax(dim=1)
-        )
-
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+        self.lr = lr
         self.epochs = epochs
-        
-        self.batch_size = batch_size 
+        self.batch_size = batch_size
+        self.dropout = dropout
 
-        # Ajoutez des couches Dropout
-        self.dropout = nn.Dropout(dropout)
-
-        self.criterion = nn.CrossEntropyLoss()
-
-        #self.optimizer = optim.SGD(self.parameters(), lr=0.001, momentum=0.9) #on parle sde paramettre du module
-        self.optimizer = optim.Adam(self.parameters(), lr=lr,betas=(0.9,0.99),weight_decay=1e-4) #on parle sde paramettre du module
-
-    def forward(self, x):
-        out = self.layer1(x)
-        out = self.layer2(out)
-
-        out = out.reshape(out.size(0), -1)
-        out = self.fc(out)
-
-        out = self.dropout(out)
-
-        return out
+        self.CNN = None
 
     def entrainer(self, x_train, t_train):
-        
-        inputs, labels = x_train, t_train
-
-        # Utiliser DataLoader pour faciliter la gestion des mini-batchs
-        train_dataset = torch.utils.data.TensorDataset(inputs, labels)
-        train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
-
-        
-        for epoch in range(self.epochs):  # loop over the dataset multiple times
-
-            running_loss = 0.0
-            for i, (inputs_batch, labels_batch) in enumerate(train_loader):
-                  
-                # zero the parameter gradients
-                self.optimizer.zero_grad()
-
-                # forward + backward + optimize
-                outputs = self.forward(inputs_batch)
-                loss = self.criterion(outputs, labels_batch)
-                loss.backward()
-                self.optimizer.step()
-
-                # print statistics
-                running_loss += loss.item()
-                if i % 10 == 0:  # print every 2000 mini-batches
-                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss /20:.5f}')
-                    running_loss = 0.0
-
-        print('Finished Training')
+        self.CNN = Net(lr=self.lr, dropout=self.dropout, epochs=self.epochs, batch_size=self.batch_size)
+        self.CNN.entrainer(x_train, t_train)
 
     def prediction(self, x):
-        # This function should return the predicted class for input x
-        with torch.no_grad():
-            outputs = self.forward(x)
-            _, predicted = torch.max(outputs,1)
-        return predicted.tolist()
+        return self.CNN.prediction(x)
 
     def parametres(self):
-        # This function should return the parameters (weights and biases) of the model
-        return list(self.parameters())
+        return list(self.CNN.parameters())
 
     def erreur(self, t, prediction):
-        # This function should return the error between the true labels (t) and predicted labels (prediction)
-        return self.criterion(prediction, t)
+        return self.CNN.erreur(t, prediction)
 
     def afficher(self, x_train, t_train, x_test, t_test):
         pass
+
+    def get_hyperparametres(self):
+        """
+        Renvoie une liste de valeurs que peuvent prendre les hyperparamètres
+
+        :return: Une liste contenant un ensemble de valeur possible pour chaque hyperparamètres
+        """
+
+        learning_rate_liste = np.linspace(0.001, 1, 10)
+        drop_out_liste = np.linspace(0.2, 0.8, 5).astype(int)
+        epoch_liste = np.linspace(1, 15, 10).astype(int)
+        taille_du_batch_liste = np.linspace(64, 128, 5).astype(int)
+
+        return [learning_rate_liste, drop_out_liste, epoch_liste,taille_du_batch_liste]
+
+
+    def set_hyperparametres(self, hyperparametres_list):
+        """
+        Met à jour les valeurs des hyperparamètres
+        :param hyperparametres_list: liste contenant les nouvelles valeurs des hyperparamètres
+        """
+        self.lr = hyperparametres_list[0]
+        self.dropout = hyperparametres_list[1]
+        self.epochs = hyperparametres_list[2]
+        self.batch_size = int(hyperparametres_list[3])
 

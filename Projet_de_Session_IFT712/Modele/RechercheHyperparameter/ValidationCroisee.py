@@ -1,4 +1,5 @@
 from sklearn.model_selection import KFold
+import torch
 from .RechercheHyperparameter import StrategyRechercheHyperparameter
 import numpy as np
 from itertools import product
@@ -61,6 +62,12 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
                 modele.entrainement(X_Entrainement, T_Entrainement)
 
                 predictions = modele.prediction(X_Validation)
+                
+                if type(T_Validation) == torch.Tensor:
+                    #Transformation du one hot vector en valeur de classe pour le calcul d'accuracy
+                    _, t_valid_pred = torch.max(T_Validation, 1)
+                    T_Validation = t_valid_pred.tolist()          
+                
                 precision_total += accuracy_score(T_Validation, predictions)
 
             precision_moyenne = precision_total / self.k
