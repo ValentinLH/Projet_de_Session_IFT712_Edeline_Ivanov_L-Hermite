@@ -4,6 +4,7 @@ import numpy as np
 from scipy.interpolate import LinearNDInterpolator
 from sklearn.calibration import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix, f1_score, precision_score, recall_score
+import torch
 
 # Créez une classe abstraite pour la stratégie
 class StrategieClassification(ABC):   
@@ -44,7 +45,7 @@ class ClassifieurLineaire:
 
     def prediction(self, x):
         # Utilisez la stratégie pour la prédiction
-        if not isinstance(x, (list, np.ndarray)):
+        if not isinstance(x, (list, np.ndarray,torch.Tensor)):
             x = [x] 
         
         return self.strategie.prediction(x)
