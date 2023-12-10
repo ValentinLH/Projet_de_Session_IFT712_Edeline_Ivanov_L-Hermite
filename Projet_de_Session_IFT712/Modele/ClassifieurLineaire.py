@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 from scipy.interpolate import LinearNDInterpolator
 from sklearn.calibration import LabelEncoder
-from sklearn.metrics import classification_report, confusion_matrix, f1_score, precision_score, recall_score
+from sklearn.metrics import  confusion_matrix, f1_score, precision_score, recall_score
 import torch
 
 # Créez une classe abstraite pour la stratégie
@@ -35,7 +35,7 @@ class ClassifieurLineaire:
         """
         Algorithmes de classification lineaire
 
-        La classe prend  une instance de la stratégie de classification.
+        La classe prend une instance de la stratégie de classification.
         """
         self.strategie = strategie
 
@@ -61,7 +61,7 @@ class ClassifieurLineaire:
         x_train, t_train : donnees d'entrainement
         x_test, t_test : donnees de test
         """
-        #self.strategie.afficher(x_train, t_train, x_test, t_test)
+        self.strategie.afficher(x_train, t_train, x_test, t_test)
         self.afficher(x_train, t_train, x_test, t_test)
 
     def parametres(self):
@@ -83,6 +83,15 @@ class ClassifieurLineaire:
         self.strategie.set_hyperparametres(hyperparametres_list)
 
     def afficher(self, x_train, t_train, x_test, t_test):
+        """
+        Affiche les frontières de décision pour l'ensemble d'entraînement et de test.
+
+        Parameters:
+        - x_train (array): Données d'entraînement.
+        - t_train (array): Étiquettes d'entraînement.
+        - x_test (array): Données de test.
+        - t_test (array): Étiquettes de test.
+        """
         le = LabelEncoder()
         t_train_encoded = le.fit_transform(t_train)
         t_test_encoded = le.transform(t_test)
@@ -155,6 +164,19 @@ class ClassifieurLineaire:
         
     # Fonction pour évaluer le modèle 
     def evaluer(self, X, y):
+        """
+        Évalue le modèle en affichant la matrice de confusion et en renvoyant les métriques de performance.
+
+        Parameters:
+        - X (array): Données pour l'évaluation.
+        - y (array): Étiquettes pour l'évaluation.
+
+        Returns:
+        - precision (float): Précision pondérée.
+        - rappel (float): Rappel pondéré.
+        - f1 (float): Score F1 pondéré.
+        - matrice_confusion (array): Matrice de confusion.
+        """
         predictions = self.prediction(X)
         precision = precision_score(y, predictions, average='weighted')
         rappel = recall_score(y, predictions, average='weighted')
@@ -170,9 +192,6 @@ class ClassifieurLineaire:
         plt.xlabel('Vraies étiquettes')
         plt.ylabel('Étiquettes prédites')
         plt.show()
-
-        # Afficher le rapport de classification
-        #print("Rapport de Classification:\n", class_report)
         
         return precision, rappel, f1, matrice_confusion
 

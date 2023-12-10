@@ -3,8 +3,8 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from Projet_de_Session_IFT712.Modele.ClassifieurLineaire import StrategieClassification
-from Projet_de_Session_IFT712.Modele.data import TrainData
+from Modele.ClassifieurLineaire import StrategieClassification
+from Modele.data import TrainData
 import numpy as np
 
 class Reseaux_Neurones(StrategieClassification) :
@@ -60,7 +60,11 @@ class Reseaux_Neurones(StrategieClassification) :
         return
 
     def get_hyperparametres(self):
+        """
+        Renvoie une liste de valeurs que peuvent prendre les hyperparamètres
 
+        :return: Une liste contenant un ensemble de valeur possible pour chaque hyperparamètres
+        """
         #parametre generaux du MLPClassifier
         learning_rate_type_liste = ["constant", "invscaling", "adaptive"]
         learning_rate_liste = np.linspace(0.001, 1, 5)  # np.array([0.01]) #np.logspace(-4, 0, 5) #np.linspace(0.001, 0.01, 10)  # np.array([0.01])
@@ -71,7 +75,11 @@ class Reseaux_Neurones(StrategieClassification) :
         return [learning_rate_type_liste, learning_rate_liste,max_iterations_liste, fonction_activation,solveur_liste]
 
     def set_hyperparametres(self, hyperparametres_list):
+        """
+        Met à jour les valeurs des hyperparamètres
 
+        :param hyperparametres_list: liste contenant les nouvelles valeurs des hyperparamètres
+        """
         self.learning_rate = hyperparametres_list[0]
         self.learning_rate_init = hyperparametres_list[1]
         self.max_iter = hyperparametres_list[2]

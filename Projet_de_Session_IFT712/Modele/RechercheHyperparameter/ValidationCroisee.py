@@ -29,7 +29,7 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
         nbr_iterations = np.prod([len(i) for i in hyperparametres])
         compteur = 0
 
-        print("########################## Début de la recherche ##########################")
+        print("########################## Début de la recherche - Validation Croisée ##########################")
         print("Il y aura ", nbr_iterations, " iterations")
 
         #Création d'une instance contenant toutes les suites d'hyperparamètres possibles

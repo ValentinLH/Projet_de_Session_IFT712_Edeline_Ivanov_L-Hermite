@@ -3,6 +3,8 @@ from sklearn.utils import resample
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 from itertools import product
+import numpy as np
+
 
 class BootstrapValidation(StrategyRechercheHyperparameter):
     def __init__(self, n_bootstrap, k_fold):
@@ -23,10 +25,13 @@ class BootstrapValidation(StrategyRechercheHyperparameter):
         :param X: Données d'entrée.
         :param T: Étiquettes des données d'entrée.
         """
-
+        
         # Récupération des hyperparamètres du modèle
         hyperparametres = modele.get_hyperparametres()
 
+        nbr_iterations = np.prod([len(i) for i in hyperparametres])
+        print("########################## Début de la recherche - BootstrapValidation ##########################")
+        print("Il y aura ", nbr_iterations, " iterations")
         # Création d'une instance contenant toutes les suites d'hyperparamètres possibles
         hyperparameters_combinaisons = product(*hyperparametres)
 
@@ -35,9 +40,19 @@ class BootstrapValidation(StrategyRechercheHyperparameter):
         meilleur_precision = 0.0
         meilleur_hyperparametres = first_line
 
+        
+        
+        compteur = 0
+
+        
+
         for parametres in (first_line, *hyperparameters_combinaisons):
             precision_total = 0.0
-
+            compteur += 1
+            
+            if (compteur%10 == 0):
+                print("iterations ", compteur, " sur ", nbr_iterations)
+            
             for _ in range(self.n_bootstrap):
                 # Utilisation du bootstrap pour créer un nouvel ensemble d'entraînement
                 X_bootstrap, T_bootstrap = resample(X, T, random_state=42)
@@ -60,6 +75,11 @@ class BootstrapValidation(StrategyRechercheHyperparameter):
             if precision_moyenne > meilleur_precision:
                 meilleur_precision = precision_moyenne
                 meilleur_hyperparametres = parametres
+                print("iterations ", compteur, " sur ", nbr_iterations)
+                print("precision amélioré: ", meilleur_precision, "\tavec ces paramètres: ", meilleur_hyperparametres)
 
-        print("Meilleurs hyperparamètres: ", meilleur_hyperparametres)
+
+        print("########################## Fin de la recherche ##########################")
+        print("meilleur hyperparametres: ", meilleur_hyperparametres)
+        print("precisin trouvée: ", meilleur_precision)
         modele.set_hyperparametres(meilleur_hyperparametres)

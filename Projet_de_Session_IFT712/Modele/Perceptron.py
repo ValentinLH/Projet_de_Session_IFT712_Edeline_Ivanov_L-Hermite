@@ -130,8 +130,12 @@ class Perceptron(StrategieClassification):
         plt.show()    
  
     def get_hyperparametres(self):
-    
-        learning_rate_liste = np.linspace(0.001, 1, 10) #np.array([0.01])
+        """
+        Renvoie une liste de valeurs que peuvent prendre les hyperparamètres
+
+        :return: Une liste contenant un ensemble de valeur possible pour chaque hyperparamètres
+        """
+        learning_rate_liste = np.linspace(0.001, 1, 10) 
         max_iterations_liste = np.linspace(500, 1500, 10).astype(int)
         penalty_liste = np.array(['l2'])
         
@@ -141,6 +145,11 @@ class Perceptron(StrategieClassification):
                  penalty_liste]
     
     def set_hyperparametres(self, hyperparametres_list):
+        """
+        Met à jour les valeurs des hyperparamètres
+
+        :param hyperparametres_list: liste contenant les nouvelles valeurs des hyperparamètres
+        """
         self.learning_rate = hyperparametres_list[0]
         self.max_iterations = hyperparametres_list[1]
         self.penalty= hyperparametres_list[2]
