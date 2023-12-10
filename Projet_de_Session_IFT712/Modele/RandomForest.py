@@ -113,21 +113,22 @@ class RandomForest(StrategieClassification):
 
     def get_hyperparametres(self):
     
-        n_estimators_liste = np.linspace(50, 150, 10).astype(int) #np.array([0.01])
+        n_estimators_liste = np.linspace(70, 150, 10).astype(int) #np.array([0.01])
         #n_estimators_liste =  np.array([100])
         #criterion_liste = np.array(["gini", "entropy", "log_loss"])
-        criterion_liste = np.array(["gini"])
-        max_depth_liste = np.array([None]) #np.linspace(500, 1500, 10).astype(int)
+        criterion_liste = np.array(["gini","log_loss","entropy"])
+        #max_depth_liste = np.array([None]) #np.linspace(500, 1500, 10).astype(int)
         
         
         return [ n_estimators_liste,
                  criterion_liste,
-                 max_depth_liste]
+                 #max_depth_liste
+                ]
     
     def set_hyperparametres(self, hyperparametres_list):
         self.n_estimators = hyperparametres_list[0]
         self.criterion  = hyperparametres_list[1]
-        self.max_depth= hyperparametres_list[2]
+        #self.max_depth= hyperparametres_list[2]
         
 
 
