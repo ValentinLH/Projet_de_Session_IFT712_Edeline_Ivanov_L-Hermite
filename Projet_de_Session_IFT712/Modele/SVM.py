@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 from sklearn.calibration import LabelEncoder
 from scipy.interpolate import LinearNDInterpolator
 
+
 class SVM(StrategieClassification):
     def __init__(self, kernel='linear', C=1.0):
         """
         Strategie de classification utilisant le svm de scikit-learn.
 
-        :param kernel: specifies the type of kernel to use for the algorithm. Can be linear, poly, rbf, sigmoid or precomputed
-        :param C: regularization parameter
+        :param kernel: Le type du kernel pour l'algorithme.Peut etre "linear", "poly", "rbf", "sigmoid" ou "precomputed"
+        :param C: parametre de regularisation
         """
         self.kernel = kernel
         self.C = C
@@ -41,7 +42,7 @@ class SVM(StrategieClassification):
         if self.svm_modele is not None:
             return self.svm_modele.predict(x)
         return 0
-    
+
     def parametres(self):
         """
         Retourne les parametres du classifieur
@@ -71,7 +72,6 @@ class SVM(StrategieClassification):
 
         return [C_liste, noyau_liste]
 
-        
     def set_hyperparametres(self, hyperparametres_list):
         """
         Met à jour les valeurs des hyperparamètres
@@ -102,18 +102,18 @@ class SVM(StrategieClassification):
 
         # Utiliser LinearNDInterpolator pour interpoler les donnees
         points = np.column_stack((x_train[:, 0], x_train[:, 1]))
-        values = x_train[:,2:]
-        
+        values = x_train[:, 2:]
+
         interpolator = LinearNDInterpolator(points, values)
         grille_xy = np.c_[xx.ravel(), yy.ravel()]
         grille_dim = interpolator(grille_xy)
-        grille_tot = np.c_[grille_xy,grille_dim]
+        grille_tot = np.c_[grille_xy, grille_dim]
         grille_tot[np.isnan(grille_tot)] = 0
         grille_z = self.svm_modele.predict(grille_tot)
-        
+
         Z = le.transform(grille_z)
         # Remettre les resultats en forme pour le trace
-        Z = Z.reshape(xx.shape) 
+        Z = Z.reshape(xx.shape)
 
         plt.figure(0)
 
@@ -134,15 +134,15 @@ class SVM(StrategieClassification):
 
         # Utiliser LinearNDInterpolator pour interpoler les donnees
         points = np.column_stack((x_test[:, 0], x_test[:, 1]))
-        values = x_test[:,2:]
-        
+        values = x_test[:, 2:]
+
         interpolator = LinearNDInterpolator(points, values)
         grille_xy = np.c_[xx.ravel(), yy.ravel()]
         grille_dim = interpolator(grille_xy)
-        grille_tot = np.c_[grille_xy,grille_dim]
+        grille_tot = np.c_[grille_xy, grille_dim]
         grille_tot[np.isnan(grille_tot)] = 0
         grille_z = self.svm_modele.predict(grille_tot)
-        
+
         Z = le.transform(grille_z)
         # Remettre les resultats en forme pour le trace
         Z = Z.reshape(xx.shape)

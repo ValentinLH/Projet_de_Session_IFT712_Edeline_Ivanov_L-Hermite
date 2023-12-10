@@ -6,6 +6,7 @@ from itertools import product
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 
+
 class ValidationCroisee(StrategyRechercheHyperparameter):
     def __init__(self, k):
         """
@@ -24,7 +25,7 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
         :param T: Etiquette des donnees d'entrees
         """
 
-        #Récupération des hyperparamètres du modèle
+        # Récupération des hyperparamètres du modèle
         hyperparametres = modele.get_hyperparametres()
 
         nbr_iterations = np.prod([len(i) for i in hyperparametres])
@@ -33,7 +34,7 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
         print("########################## Début de la recherche - Validation Croisée ##########################")
         print("Il y aura ", nbr_iterations, " iterations")
 
-        #Création d'une instance contenant toutes les suites d'hyperparamètres possibles
+        # Création d'une instance contenant toutes les suites d'hyperparamètres possibles
         hyperparameters_combinaisons = product(*hyperparametres)
 
         premiere_ligne = next(hyperparameters_combinaisons)
@@ -44,12 +45,12 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
         for parametres in (premiere_ligne, *hyperparameters_combinaisons):
 
             precision_total = 0.0
-            
+
             compteur += 1
 
-            if (compteur%10 == 0):
+            if (compteur % 10 == 0):
                 print("iterations ", compteur, " sur ", nbr_iterations)
-            
+
             # Utilisation de KFold pour la validation croisée
             kf = KFold(n_splits=self.k, shuffle=True, random_state=42)
 
@@ -62,12 +63,12 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
                 modele.entrainement(X_Entrainement, T_Entrainement)
 
                 predictions = modele.prediction(X_Validation)
-                
-                if type(T_Validation) == torch.Tensor:
-                    #Transformation du one hot vector en valeur de classe pour le calcul d'accuracy
+
+                if T_Validation is torch.Tensor:
+                    # Transformation du one hot vector en valeur de classe pour le calcul d'accuracy
                     _, t_valid_pred = torch.max(T_Validation, 1)
-                    T_Validation = t_valid_pred.tolist()          
-                
+                    T_Validation = t_valid_pred.tolist()
+
                 precision_total += accuracy_score(T_Validation, predictions)
 
             precision_moyenne = precision_total / self.k

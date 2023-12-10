@@ -3,11 +3,12 @@ from matplotlib import pyplot as plt
 import numpy as np
 from scipy.interpolate import LinearNDInterpolator
 from sklearn.calibration import LabelEncoder
-from sklearn.metrics import  confusion_matrix, f1_score, precision_score, recall_score
+from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score
 import torch
 
+
 # Créez une classe abstraite pour la stratégie
-class StrategieClassification(ABC):   
+class StrategieClassification(ABC):
     @abstractmethod
     def entrainer(self, x_train, t_train):
         pass
@@ -21,17 +22,17 @@ class StrategieClassification(ABC):
         pass
 
     @abstractmethod
-    def erreur(self,t, prediction):
+    def erreur(self, t, prediction):
         pass
-    
+
     @abstractmethod
     def afficher(self, x_train, t_train, x_test, t_test):
         pass
-    
+
 
 # Classe ClassifieurLineaire avec les méthodes nécessaires pour travailler avec des stratégies de classification
 class ClassifieurLineaire:
-    def __init__(self, strategie : StrategieClassification):
+    def __init__(self, strategie: StrategieClassification):
         """
         Algorithmes de classification lineaire
 
@@ -45,9 +46,9 @@ class ClassifieurLineaire:
 
     def prediction(self, x):
         # Utilisez la stratégie pour la prédiction
-        if not isinstance(x, (list, np.ndarray,torch.Tensor)):
-            x = [x] 
-        
+        if not isinstance(x, (list, np.ndarray, torch.Tensor)):
+            x = [x]
+
         return self.strategie.prediction(x)
 
     def erreur(self, t, prediction):
@@ -69,13 +70,13 @@ class ClassifieurLineaire:
         Retourne les paramètres du modèle
         """
         return self.strategie.parametres()
-    
+
     def get_hyperparametres(self):
         """
         Retourne les hyperparamètres du modèle
         """
         return self.strategie.get_hyperparametres()
-    
+
     def set_hyperparametres(self, hyperparametres_list):
         """
         definit les hyperparamètres du modèle
@@ -103,15 +104,15 @@ class ClassifieurLineaire:
 
         # Utiliser LinearNDInterpolator pour interpoler les données
         points = np.column_stack((x_train[:, 0], x_train[:, 1]))
-        values = x_train[:,2:]
-        
+        values = x_train[:, 2:]
+
         interpolator = LinearNDInterpolator(points, values)
         grid_xy = np.c_[xx.ravel(), yy.ravel()]
         grid_dim = interpolator(grid_xy)
-        grid_tot = np.c_[grid_xy,grid_dim]
+        grid_tot = np.c_[grid_xy, grid_dim]
         grid_tot[np.isnan(grid_tot)] = 0
         grid_z = self.prediction(grid_tot)
-        
+
         Z = le.transform(grid_z)
         # Remettre les résultats en forme pour le tracé
         Z = Z.reshape(xx.shape)
@@ -127,7 +128,7 @@ class ClassifieurLineaire:
         plt.yticks(())
 
         plt.title('Frontières de décision - Ensemble d\'Entrainement')
-        
+
         h = 0.05
         x_min, x_max = x_test[:, 0].min() - .5, x_test[:, 0].max() + .5
         y_min, y_max = x_test[:, 1].min() - .5, x_test[:, 1].max() + .5
@@ -135,15 +136,15 @@ class ClassifieurLineaire:
 
         # Utiliser LinearNDInterpolator pour interpoler les données
         points = np.column_stack((x_test[:, 0], x_test[:, 1]))
-        values = x_test[:,2:]
-        
+        values = x_test[:, 2:]
+
         interpolator = LinearNDInterpolator(points, values)
         grid_xy = np.c_[xx.ravel(), yy.ravel()]
         grid_dim = interpolator(grid_xy)
-        grid_tot = np.c_[grid_xy,grid_dim]
+        grid_tot = np.c_[grid_xy, grid_dim]
         grid_tot[np.isnan(grid_tot)] = 0
         grid_z = self.prediction(grid_tot)
-        
+
         Z = le.transform(grid_z)
         # Remettre les résultats en forme pour le tracé
         Z = Z.reshape(xx.shape)
@@ -160,9 +161,10 @@ class ClassifieurLineaire:
         plt.yticks(())
 
         plt.title('Frontières de décision - Données de test')
-        plt.show()    
-        
-    # Fonction pour évaluer le modèle 
+        plt.show()
+
+        # Fonction pour évaluer le modèle
+
     def evaluer(self, X, y):
         """
         Évalue le modèle en affichant la matrice de confusion et en renvoyant les métriques de performance.
@@ -183,7 +185,7 @@ class ClassifieurLineaire:
         f1 = f1_score(y, predictions, average='weighted')
         matrice_confusion = confusion_matrix(y, predictions)
         # Rapport de classification
-        #class_report = classification_report(X, y)
+        # class_report = classification_report(X, y)
 
         # Tracer la matrice de confusion
         plt.imshow(matrice_confusion, interpolation='nearest', cmap=plt.cm.Blues)
@@ -192,6 +194,5 @@ class ClassifieurLineaire:
         plt.xlabel('Vraies étiquettes')
         plt.ylabel('Étiquettes prédites')
         plt.show()
-        
-        return precision, rappel, f1, matrice_confusion
 
+        return precision, rappel, f1, matrice_confusion

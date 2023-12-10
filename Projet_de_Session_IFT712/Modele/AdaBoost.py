@@ -6,8 +6,10 @@ import matplotlib.pyplot as plt
 from sklearn.calibration import LabelEncoder
 from scipy.interpolate import LinearNDInterpolator
 
+
 class AdaBoost(StrategieClassification):
-    def __init__(self, n_estimators=50, learning_rate=0.01, random_state=0, algorithm="SAMME.R", max_depth_tree_classifieur=1):
+    def __init__(self, n_estimators=50, learning_rate=0.01, random_state=0, algorithm="SAMME.R",
+                 max_depth_tree_classifieur=1):
         """
         Strategie de classification utilisant le svm de scikit-learn.
 
@@ -33,8 +35,9 @@ class AdaBoost(StrategieClassification):
         :param t_train: Les étiquettes de classe cibles.
         """
         tree_classifier = DecisionTreeClassifier(max_depth=self.max_depth_tree_classifieur)
-        self.adaboost_modele = AdaBoostClassifier(tree_classifier, n_estimators=self.n_estimators, learning_rate=self.learning_rate, 
-                                                 random_state=self.random_state, algorithm=self.algorithm)
+        self.adaboost_modele = AdaBoostClassifier(tree_classifier, n_estimators=self.n_estimators,
+                                                  learning_rate=self.learning_rate,
+                                                  random_state=self.random_state, algorithm=self.algorithm)
         self.adaboost_modele.fit(x_train, t_train)
 
     def prediction(self, x):
@@ -47,14 +50,15 @@ class AdaBoost(StrategieClassification):
         if self.adaboost_modele is not None:
             return self.adaboost_modele.predict(x)
         return 0
-    
+
     def parametres(self):
         """
         Retourne les parametres du classifieur
 
         :return: dictionnaire composé des parametres associé à leur valeur
         """
-        return {'n_estimators': self.n_estimators, 'learning_rate': self.learning_rate, 'random_state': self.random_state,
+        return {'n_estimators': self.n_estimators, 'learning_rate': self.learning_rate,
+                'random_state': self.random_state,
                 'algorithm': self.algorithm, "max_depth_tree_classifieur": self.max_depth_tree_classifieur}
 
     def erreur(self, t, prediction):
@@ -66,7 +70,7 @@ class AdaBoost(StrategieClassification):
         :return: 1 si l'erreur est commise, 0 sinon.
         """
         return 1 if t != prediction else 0
-    
+
     def get_hyperparametres(self):
         """
         Renvoie une liste de valeurs que peuvent prendre les hyperparamètres
@@ -80,11 +84,11 @@ class AdaBoost(StrategieClassification):
         depth_liste = np.array([3, 4, 5])
 
         return [estimator_liste,
-                         learning_rate_liste,
-                         random_state_liste,
-                         algorithm_liste,
-                         depth_liste]
-    
+                learning_rate_liste,
+                random_state_liste,
+                algorithm_liste,
+                depth_liste]
+
     def set_hyperparametres(self, hyperparametres_list):
         """
         Met à jour les valeurs des hyperparamètres
@@ -97,7 +101,6 @@ class AdaBoost(StrategieClassification):
         self.algorithm = hyperparametres_list[3]
         self.max_depth_tree_classifieur = hyperparametres_list[4]
 
-    
     def afficher(self, x_train, t_train, x_test, t_test):
         """
         Affiche les données dans un espace à deux dimensions
@@ -110,7 +113,7 @@ class AdaBoost(StrategieClassification):
 
         le = LabelEncoder()
         t_train_encode = le.fit_transform(t_train)
-        t_test_encode= le.transform(t_test)
+        t_test_encode = le.transform(t_test)
 
         h = 0.05
         x_min, x_max = x_train[:, 0].min() - .5, x_train[:, 0].max() + .5
@@ -119,18 +122,18 @@ class AdaBoost(StrategieClassification):
 
         # Utiliser LinearNDInterpolator pour interpoler les donnees
         points = np.column_stack((x_train[:, 0], x_train[:, 1]))
-        values = x_train[:,2:]
-        
+        values = x_train[:, 2:]
+
         interpolator = LinearNDInterpolator(points, values)
         grille_xy = np.c_[xx.ravel(), yy.ravel()]
         grille_dim = interpolator(grille_xy)
-        grille_tot = np.c_[grille_xy,grille_dim]
+        grille_tot = np.c_[grille_xy, grille_dim]
         grille_tot[np.isnan(grille_tot)] = 0
         grille_z = self.svm_model.predict(grille_tot)
-        
+
         Z = le.transform(grille_z)
         # Remettre les resultats en forme pour le trace
-        Z = Z.reshape(xx.shape) 
+        Z = Z.reshape(xx.shape)
 
         plt.figure(0)
 
@@ -151,15 +154,15 @@ class AdaBoost(StrategieClassification):
 
         # Utiliser LinearNDInterpolator pour interpoler les donnees
         points = np.column_stack((x_test[:, 0], x_test[:, 1]))
-        values = x_test[:,2:]
-        
+        values = x_test[:, 2:]
+
         interpolator = LinearNDInterpolator(points, values)
         grille_xy = np.c_[xx.ravel(), yy.ravel()]
         grille_dim = interpolator(grille_xy)
-        grille_tot = np.c_[grille_xy,grille_dim]
+        grille_tot = np.c_[grille_xy, grille_dim]
         grille_tot[np.isnan(grille_tot)] = 0
         grille_z = self.svm_model.predict(grille_tot)
-        
+
         Z = le.transform(grille_z)
         # Remettre les resultats en forme pour le trace
         Z = Z.reshape(xx.shape)

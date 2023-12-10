@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 
+
 class StrategyRechercheHyperparameter(ABC):
     @abstractmethod
     def recherche(self, model, X, T):
         pass
 
+
 class RechercheHyperparameter:
-    def __init__(self, strategie : StrategyRechercheHyperparameter):
+    def __init__(self, strategie: StrategyRechercheHyperparameter):
         """
         Algorithmes de recherches d'hyperparamètres
 

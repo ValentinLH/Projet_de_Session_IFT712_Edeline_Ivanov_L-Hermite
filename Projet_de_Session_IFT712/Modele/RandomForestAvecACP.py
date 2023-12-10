@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
+
 class RandomForestAvecACP(StrategieClassification):
     def __init__(self, n_estimators=100, max_depth=None, random_state=None, n_components=2):
         """
@@ -32,10 +33,11 @@ class RandomForestAvecACP(StrategieClassification):
         # Appliquer l'ACP aux données d'entraînement
         x_train_pca = self.pca.fit_transform(x_train)
         print("Variance expliquée par chaque composante principale :",
-          self.pca.explained_variance_ratio_)
+              self.pca.explained_variance_ratio_)
 
         # Entraîner le modèle Random Forest sur les composantes principales
-        self.random_forest_model = RandomForestClassifier(n_estimators=self.n_estimators, max_depth=self.max_depth, random_state=self.random_state)
+        self.random_forest_model = RandomForestClassifier(n_estimators=self.n_estimators, max_depth=self.max_depth,
+                                                          random_state=self.random_state)
         self.random_forest_model.fit(x_train_pca, t_train)
 
     def prediction(self, x):
@@ -87,7 +89,6 @@ class RandomForestAvecACP(StrategieClassification):
         x_test_pca = self.pca.transform(x_test)
         x_train_pca = self.pca.transform(x_train)
 
-        
         # Utilisez seulement les deux premières composantes principales pour l'affichage
         x_train_pca_subset = x_train_pca[:, :2]
         x_test_pca_subset = x_test_pca[:, :2]
@@ -98,36 +99,38 @@ class RandomForestAvecACP(StrategieClassification):
         # Affichage des données d'entraînement
         plt.figure(figsize=(12, 5))
         plt.subplot(1, 2, 1)
-        plt.scatter(x_train_pca_subset[:, 0], x_train_pca_subset[:, 1], c=t_train_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
+        plt.scatter(x_train_pca_subset[:, 0], x_train_pca_subset[:, 1], c=t_train_encoded, cmap=plt.cm.Paired,
+                    edgecolor='k', s=20)
         plt.title('Training Data (PCA)')
 
         # Affichage de la frontière de décision pour les deux premières composantes principales
-        xx, yy = np.meshgrid(np.linspace(np.min(x_train_pca_subset[:, 0]) - 2, np.max(x_train_pca_subset[:, 0]) + 2, 100),
-                            np.linspace(np.min(x_train_pca_subset[:, 1]) - 2, np.max(x_train_pca_subset[:, 1]) + 2, 100))
+        xx, yy = np.meshgrid(
+            np.linspace(np.min(x_train_pca_subset[:, 0]) - 2, np.max(x_train_pca_subset[:, 0]) + 2, 100),
+            np.linspace(np.min(x_train_pca_subset[:, 1]) - 2, np.max(x_train_pca_subset[:, 1]) + 2, 100))
 
         espace = np.c_[xx.ravel(), yy.ravel()]
         Z = self.random_forest_model.predict(espace)
         Z = le.fit_transform(Z)
         Z = Z.reshape(xx.shape)
-        plt.contourf(xx, yy, Z , cmap=plt.cm.Paired, alpha=0.8)
+        plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
 
-        
         t_test_encoded = le.fit_transform(t_test)
 
         # Affichage des données de test
         plt.subplot(1, 2, 2)
-        plt.scatter(x_test_pca_subset[:, 0], x_test_pca_subset[:, 1], c=t_test_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
+        plt.scatter(x_test_pca_subset[:, 0], x_test_pca_subset[:, 1], c=t_test_encoded, cmap=plt.cm.Paired,
+                    edgecolor='k', s=20)
         plt.title('Testing Data (PCA)')
 
         # Affichage de la frontière de décision pour les deux premières composantes principales des données de test
         xx, yy = np.meshgrid(np.linspace(np.min(x_test_pca_subset[:, 0]) - 2, np.max(x_test_pca_subset[:, 0]) + 2, 100),
-                            np.linspace(np.min(x_test_pca_subset[:, 1]) - 2, np.max(x_test_pca_subset[:, 1]) + 2, 100))
+                             np.linspace(np.min(x_test_pca_subset[:, 1]) - 2, np.max(x_test_pca_subset[:, 1]) + 2, 100))
 
         espace = np.c_[xx.ravel(), yy.ravel()]
         Z = self.random_forest_model.predict(espace)
         Z = le.fit_transform(Z)
         Z = Z.reshape(xx.shape)
-        plt.contourf(xx, yy, Z , cmap=plt.cm.Paired, alpha=0.8)
+        plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
 
         # Affichage final
         plt.show()

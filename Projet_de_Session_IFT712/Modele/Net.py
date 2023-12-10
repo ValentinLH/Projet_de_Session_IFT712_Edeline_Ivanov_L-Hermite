@@ -2,8 +2,18 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+
 class Net(nn.Module):
     def __init__(self, lr=0.001, epochs=15, batch_size=64, dropout=0.5):
+        """
+        Classe qui implemente la partie foncionnel du CNN
+
+        :param lr: la valeur du pas d'apprentissage
+        :param epochs: le nombre d'epochs realiser lors de l'entrainement
+        :param batch_size: la taille du batch utiliser pour l'entrainement
+        :param dropout: la valeur du DropOut
+
+        """
         super().__init__()
 
         # convolutional layer 1 & max pool layer 1
@@ -28,15 +38,20 @@ class Net(nn.Module):
 
         self.batch_size = batch_size
 
-        # Ajoutez des couches Dropout
         self.dropout = nn.Dropout(dropout)
 
         self.criterion = nn.CrossEntropyLoss()
 
         self.optimizer = optim.Adam(self.parameters(), lr=lr, betas=(0.9, 0.99),
-                                    weight_decay=1e-4)  # on parle sde paramettre du module
+                                    weight_decay=1e-4)  # on parle des paramettre du module
 
     def forward(self, x):
+        """
+        Fonction qui permet de realiser la propagation du CNN pour des donnees x
+        :param x: donnees x
+        :return: le resultats de la propagation avant sur x
+
+        """
         out = self.layer1(x)
         out = self.layer2(out)
 
@@ -93,4 +108,10 @@ class Net(nn.Module):
         return predicted.tolist()
 
     def erreur(self, t, prediction):
+        """
+
+        :param t: vrai etiquette de classe
+        :param prediction: valeur predite par le CNN
+        :return: return l'erreur calcule par la fonction d'erreur
+        """
         return self.criterion(prediction, t)
