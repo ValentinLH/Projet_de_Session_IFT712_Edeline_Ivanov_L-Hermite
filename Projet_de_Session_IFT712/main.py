@@ -12,7 +12,7 @@ from Modele.RechercheHyperparameter.SousEchantillonnageAleatoire import *
 from Modele.RechercheHyperparameter.ValidationCroisee import *
 from Modele.RechercheHyperparameter.BootstrapValidation import *
 from Modele.data import TrainData
-from Modele.Convolutional_Neural_Network import Net
+from Modele.Convolutional_Neural_Network import Convolutional_Neural_Network
 
 from Modele.Reseaux_de_Neurone import Reseaux_Neurones
 
@@ -23,7 +23,7 @@ X, y = trainData.data, trainData.leafClass
 train_loader = trainData.read_image()
 trainData.imshow()
 
-net = Net()
+net = Convolutional_Neural_Network()
 classifieur = ClassifieurLineaire(net)
 
 # # Normalisation des données
@@ -77,13 +77,13 @@ classifieur = ClassifieurLineaire(strategie_SVM) '''
 
 
 #######################################################################################################
-# strategie_recherche = ValidationCroisee(k = 5)
-#
-# #Recherche d'Hyperparametre
-# recherche = RechercheHyperparameter(strategie_recherche)
-#
-# #Recherche des hyperparamètres
-# recherche.recherche(classifieur, X_train, y_train)
+strategie_recherche = ValidationCroisee(k = 5)
+
+#Recherche d'Hyperparametre
+recherche = RechercheHyperparameter(strategie_recherche)
+
+#Recherche des hyperparamètres
+recherche.recherche(classifieur, X_train, y_train)
 
 # Entraînez le modèle
 classifieur.entrainement(X_train, y_train)
