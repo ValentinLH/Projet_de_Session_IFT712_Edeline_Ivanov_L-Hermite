@@ -30,8 +30,10 @@ class BootstrapValidation(StrategyRechercheHyperparameter):
         hyperparametres = modele.get_hyperparametres()
 
         nbr_iterations = np.prod([len(i) for i in hyperparametres])
+     
         print("########################## Début de la recherche - BootstrapValidation ##########################")
         print("Il y aura ", nbr_iterations, " iterations")
+     
         # Création d'une instance contenant toutes les suites d'hyperparamètres possibles
         hyperparameters_combinaisons = product(*hyperparametres)
 
@@ -39,12 +41,8 @@ class BootstrapValidation(StrategyRechercheHyperparameter):
 
         meilleur_precision = 0.0
         meilleur_hyperparametres = first_line
-
-        
         
         compteur = 0
-
-        
 
         for parametres in (first_line, *hyperparameters_combinaisons):
             precision_total = 0.0
