@@ -50,12 +50,12 @@ class Convolutional_Neural_Network(StrategieClassification):
 
         return [learning_rate_liste, drop_out_liste, epoch_liste, taille_du_batch_liste]
 
-    def set_hyperparametres(self, hyperparametres_list):
+    def set_hyperparametres(self, hyperparametres_liste):
         """
         Met à jour les valeurs des hyperparamètres
-        :param hyperparametres_list: liste contenant les nouvelles valeurs des hyperparamètres
+        :param hyperparametres_liste: liste contenant les nouvelles valeurs des hyperparamètres
         """
-        self.lr = hyperparametres_list[0]
-        self.dropout = hyperparametres_list[1]
-        self.epochs = hyperparametres_list[2]
-        self.batch_size = int(hyperparametres_list[3])
+        self.lr = hyperparametres_liste[0]
+        self.dropout = hyperparametres_liste[1]
+        self.epochs = hyperparametres_liste[2]
+        self.batch_size = int(hyperparametres_liste[3])

@@ -16,13 +16,13 @@ class Net(nn.Module):
         """
         super().__init__()
 
-        # convolutional layer 1 & max pool layer 1
+        # Couche convolutive 1
         self.layer1 = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=3),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
 
-        # convolutional layer 2 & max pool layer 2
+        # Couche convolutive 2
         self.layer2 = nn.Sequential(
             nn.Conv2d(16, 32, kernel_size=4),
             nn.ReLU(),
@@ -69,31 +69,29 @@ class Net(nn.Module):
         :param t_train: les etiquettes de classe liee au donnees d'entrainement
         """
 
-        inputs, labels = x_train, t_train
+        entre, classe = x_train, t_train
 
         # Utiliser DataLoader pour faciliter la gestion des mini-batchs
-        train_dataset = torch.utils.data.TensorDataset(inputs, labels)
-        train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
+        donnees_entrainement = torch.utils.data.TensorDataset(entre, classe)
+        chargeur_de_donnees = torch.utils.data.DataLoader(dataset=donnees_entrainement, batch_size=self.batch_size, shuffle=True)
 
-        for epoch in range(self.epochs):  # loop over the dataset multiple times
+        for epoch in range(self.epochs):
 
-            running_loss = 0.0
-            for i, (inputs_batch, labels_batch) in enumerate(train_loader):
+            perte_actuelle = 0.0
+            for i, (inputs_batch, labels_batch) in enumerate(chargeur_de_donnees):
 
-                # zero the parameter gradients
                 self.optimizer.zero_grad()
 
-                # forward + backward + optimize
-                outputs = self.forward(inputs_batch)
-                loss = self.criterion(outputs, labels_batch)
-                loss.backward()
+                sortie = self.forward(inputs_batch)
+                perte = self.criterion(sortie, labels_batch)
+                perte.backward()
                 self.optimizer.step()
 
-                # print statistics
-                running_loss += loss.item()
-                if i % 10 == 0:  # print every 2000 mini-batches
-                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 20:.5f}')
-                    running_loss = 0.0
+                # Affichage de la perte
+                perte_actuelle += perte.item()
+                if i % 10 == 0:
+                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {perte_actuelle / 20:.5f}')
+                    perte_actuelle = 0.0
 
         print('Finished Training')
 
@@ -103,8 +101,8 @@ class Net(nn.Module):
         :return: les classes des donnees predites
         """
         with torch.no_grad():
-            outputs = self.forward(x)
-            _, predicted = torch.max(outputs, 1)
+            sortie = self.forward(x)
+            _, predicted = torch.max(sortie, 1)
         return predicted.tolist()
 
     def erreur(self, t, prediction):
