@@ -2,6 +2,10 @@
  
 Ce projet regroupe le code écrit par L'HERMITE Valentin, EDELINE Maxime et IVANOV Nicolas dans le cadre du projet de fin de session de IFT712 - Techniques d'apprentissage.
 
+
+Le référentiel git du projet est disponible ici:
+https://github.com/ValentinLH/Projet_de_Session_IFT712_Edeline_Ivanov_L-Hermite 
+
 ## Présentation
 
 Nous allons travailler sur la base de données "Leaf Classification", fournie par Kaggle. On possède une base de données composé d'un ensemble de feuilles. Chaque feuille est caractérisé par 192 attributs. Le modèle doit être capable de déterminer l'espèce d'appartenance de la feuille parmi 99 espèces. Ainsi, l'objectif est d'entraîner le modèle pour qu'il détermine la classe d'appartenance d'une feuilles qu'on lui fourni parmi 99 classes.
