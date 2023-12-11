@@ -73,7 +73,8 @@ class Net(nn.Module):
 
         # Utiliser DataLoader pour faciliter la gestion des mini-batchs
         donnees_entrainement = torch.utils.data.TensorDataset(entre, classe)
-        chargeur_de_donnees = torch.utils.data.DataLoader(dataset=donnees_entrainement, batch_size=self.batch_size, shuffle=True)
+        chargeur_de_donnees = torch.utils.data.DataLoader(dataset=donnees_entrainement, batch_size=self.batch_size,
+                                                          shuffle=True)
 
         for epoch in range(self.epochs):
 

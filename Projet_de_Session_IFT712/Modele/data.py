@@ -7,18 +7,19 @@ from torch.utils.data import Dataset
 
 
 class TrainData:
-    def __init__(self, filedata):
+    def __init__(self, fichier):
         self.leafClass = None
         self.data = None
         self.idLeaf = None
-        self.filedata = filedata
+        self.fichier = fichier
 
-        self.readData(self.filedata)
+        self.readData(self.fichier)
 
         self.image = None
 
     def readData(self, filedata):
-        self.filedata = filedata
+        self.fichier = filedata
+
         # On recupere les caracteristiques des feuilles dans un dataFrame
         leaf_data = pd.read_csv(filedata, skiprows=0)
 
@@ -27,37 +28,33 @@ class TrainData:
         self.data = leaf_data.values[:, 2:]
 
     def read_image(self,
-                   data_dir=r"leaf-classification\\images"):
+                   repertoire_images=r"leaf-classification\\images"):
         train_transforms = transforms.Compose([
             transforms.Resize((224, 224)),
             transforms.ToTensor()])
 
-        tempList = []
+        ListeTemporaire = []
 
         for id in range(1, len(self.idLeaf)):
-            tempList.append((data_dir + "/" + str(id) + ".jpg", self.leafClass[id - 1]))
+            ListeTemporaire.append((repertoire_images + "/" + str(id) + ".jpg", self.leafClass[id - 1]))
 
-        train_data = MonDataset(tempList,
-                                train_transforms)  # datasets.ImageFolder(data_dir, transform=train_transforms)
+        donnees_entrainement = MonDataset(ListeTemporaire,
+                                          train_transforms)
 
-        train_loader = torch.utils.data.DataLoader(train_data, batch_size=len(self.idLeaf),
-                                                   shuffle=True)  # , collate_fn=self.my_collate_fn)
+        chargeur_de_donnees = torch.utils.data.DataLoader(donnees_entrainement, batch_size=len(self.idLeaf),
+                                                          shuffle=True)
 
-        dataiter = torch.utils.data.DataLoader.__iter__((train_loader))
-        images, labels = dataiter.__next__()
+        dataiter = torch.utils.data.DataLoader.__iter__((chargeur_de_donnees))
+        images, classes = dataiter.__next__()
 
-        print(type(images))
-        print(images.shape)
-        # print(labels.shape)
+        self.image = images
 
-        self.images = images
-
-        return train_loader
+        return chargeur_de_donnees
 
     def imshow(self):
         fig, ax = plt.subplots()
 
-        image = self.images[0].numpy().transpose(1, 2, 0)
+        image = self.image[0].numpy().transpose(1, 2, 0)
         print(image.shape)
 
         ax.imshow(image)
@@ -67,10 +64,6 @@ class TrainData:
         plt.show()
 
         return ax
-
-    def my_collate_fn(self, batch):
-        images, labels = zip(*batch)
-        return torch.stack(images), torch.tensor(labels)
 
 
 class MonDataset(Dataset):
@@ -82,17 +75,17 @@ class MonDataset(Dataset):
         return len(self.liste_tuples)
 
     def __getitem__(self, idx):
-        image_path, classe = self.liste_tuples[idx]
-        image = Image.open(image_path).convert('L')  # Assurez-vous que vos images sont en mode 'RGB'
+        chemin_image, classe = self.liste_tuples[idx]
+        image = Image.open(chemin_image).convert('L')
 
         # encodage de la classe :
-        Allclass = set([self.liste_tuples[i][1] for i in range(len(self.liste_tuples))])
-        encoded_tensor = torch.zeros(len(Allclass))
-        class_index = sorted(Allclass).index(classe)
-        encoded_tensor[class_index] = 1
+        TouteLesClasses = set([self.liste_tuples[i][1] for i in range(len(self.liste_tuples))])
+        tensor_encode = torch.zeros(len(TouteLesClasses))
+        classe_index = sorted(TouteLesClasses).index(classe)
+        tensor_encode[classe_index] = 1
 
         # Appliquer des transformations si spécifiées
         if self.transform:
             image = self.transform(image)
 
-        return image, encoded_tensor
+        return image, tensor_encode

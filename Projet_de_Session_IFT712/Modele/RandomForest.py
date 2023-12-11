@@ -102,7 +102,8 @@ class RandomForest(StrategieClassification):
         # Affichage des données d'entraînement
         plt.figure(figsize=(12, 5))
         plt.subplot(1, 2, 1)
-        plt.scatter(x_entrainement_sous_ensemble[:, 0], x_entrainement_sous_ensemble[:, 1], c=x_entrainement_encode, cmap=plt.cm.Paired, edgecolor='k',
+        plt.scatter(x_entrainement_sous_ensemble[:, 0], x_entrainement_sous_ensemble[:, 1], c=x_entrainement_encode,
+                    cmap=plt.cm.Paired, edgecolor='k',
                     s=20)
         plt.title('Training Data')
 
@@ -110,7 +111,8 @@ class RandomForest(StrategieClassification):
 
         # Affichage des données de test
         plt.subplot(1, 2, 2)
-        plt.scatter(x_test_sous_ensemble[:, 0], x_test_sous_ensemble[:, 1], c=t_test_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
+        plt.scatter(x_test_sous_ensemble[:, 0], x_test_sous_ensemble[:, 1], c=t_test_encoded,
+                    cmap=plt.cm.Paired, edgecolor='k', s=20)
         plt.title('Testing Data')
 
         # Affichage final

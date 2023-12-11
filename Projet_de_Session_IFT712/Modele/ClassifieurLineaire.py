@@ -19,7 +19,8 @@ class StrategieClassification(ABC):
         - erreur(t, prediction): Calcule l'erreur entre les étiquettes réelles et les prédictions du modèle.
         - afficher(x_train, t_train, x_test, t_test): Affiche des informations sur les performances du modèle.
 
-    Les classes concrètes doivent fournir des implémentations pour ces méthodes afin de définir une stratégie de classification spécifique.
+    Les classes concrètes doivent fournir des implémentations pour ces méthodes
+    afin de définir une stratégie de classification spécifique.
 
     """
     @abstractmethod

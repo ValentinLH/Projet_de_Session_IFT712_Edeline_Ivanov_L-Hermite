@@ -68,6 +68,18 @@ class AdaBoost(StrategieClassification):
         """
         return 1 if t != prediction else 0
 
+    def afficher(self, x_train, t_train, x_test, t_test):
+        """
+        Methode d'affichage des frontières de décision pour l'ensemble d'entraînement et de test.
+        On ne fait plus rien car elle est remplacer par la méthode générique.
+
+        :param x_train: Données d'entraînement.
+        :param t_train: Étiquettes d'entraînement.
+        :param x_test: Données de test.
+        :param t_test: Étiquettes de test.
+        """
+        pass
+
     def get_hyperparametres(self):
         """
         Renvoie une liste de valeurs que peuvent prendre les hyperparamètres

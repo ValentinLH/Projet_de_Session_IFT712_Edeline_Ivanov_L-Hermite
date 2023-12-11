@@ -98,8 +98,16 @@ class Reseaux_Neurones(StrategieClassification):
         return self.W0, self.W
 
     def afficher(self, x_train, t_train, x_test, t_test):
-        # Pas besoin de la coder car il y a un affichage generique
-        return
+        """
+        Methode d'affichage des frontières de décision pour l'ensemble d'entraînement et de test.
+        On ne fait plus rien car elle est remplacer par la méthode générique.
+
+        :param x_train: Données d'entraînement.
+        :param t_train: Étiquettes d'entraînement.
+        :param x_test: Données de test.
+        :param t_test: Étiquettes de test.
+        """
+        pass
 
     def get_hyperparametres(self):
         """

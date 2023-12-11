@@ -61,7 +61,8 @@ class Convolutional_Neural_Network(StrategieClassification):
 
     def afficher(self, x_train, t_train, x_test, t_test):
         """
-        Affiche les résultats du modèle (non implémenté dans cette classe car non nécessaire).
+        Methode d'affichage des frontières de décision pour l'ensemble d'entraînement et de test.
+        On ne fait plus rien car elle est remplacer par la méthode générique.
 
         :param x_train: Données d'entraînement.
         :param t_train: Étiquettes d'entraînement.

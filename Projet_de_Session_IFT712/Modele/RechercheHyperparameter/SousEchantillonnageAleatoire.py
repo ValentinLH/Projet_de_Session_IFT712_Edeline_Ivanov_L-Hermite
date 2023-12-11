@@ -65,15 +65,15 @@ class SousEchantillonnage(StrategyRechercheHyperparameter):
                 X = X[indices]
                 T = T[indices]
 
-                X_Entrainement, X_Validation, T_Entrainement, T_Validation = train_test_split(X, T,
-                                                                                              test_size=self.proportion_validation)
+                X_Entrainement, X_Validation, T_Entrainement, T_Validation = train_test_split(
+                    X, T, test_size=self.proportion_validation)
 
                 modele.set_hyperparametres(parametres)
                 modele.entrainement(X_Entrainement, T_Entrainement)
 
                 predictions = modele.prediction(X_Validation)
 
-                if isinstance(T_Validation,torch.Tensor):
+                if isinstance(T_Validation, torch.Tensor):
                     # Transformation du one hot vector en valeur de classe pour le calcul d'accuracy
                     _, t_valid_pred = torch.max(T_Validation, 1)
                     T_Validation = t_valid_pred.tolist()
