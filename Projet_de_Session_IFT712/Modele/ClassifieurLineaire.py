@@ -9,6 +9,19 @@ import torch
 
 # Créez une classe abstraite pour la stratégie
 class StrategieClassification(ABC):
+    """
+    Classe abstraite représentant le squelette de nos méthode de classification.
+
+    Méthodes abstraites à implémenter par les classes concrètes :
+        - entrainer(x_train, t_train): Entraîne le modèle de classification sur les données d'entraînement.
+        - prediction(x): Prédit les étiquettes de classe pour un ensemble de données.
+        - parametres(): Retourne les paramètres actuels du modèle de classification.
+        - erreur(t, prediction): Calcule l'erreur entre les étiquettes réelles et les prédictions du modèle.
+        - afficher(x_train, t_train, x_test, t_test): Affiche des informations sur les performances du modèle.
+
+    Les classes concrètes doivent fournir des implémentations pour ces méthodes afin de définir une stratégie de classification spécifique.
+
+    """
     @abstractmethod
     def entrainer(self, x_train, t_train):
         pass
@@ -41,23 +54,47 @@ class ClassifieurLineaire:
         self.strategie = strategie
 
     def entrainement(self, x_train, t_train):
-        # Utilisez la stratégie pour l'entraînement
+        """
+        Entraîne le modèle à l'aide de la stratégie de classification.
+
+        Parametres:
+        - x_train (array): Données d'entraînement.
+        - t_train (array): Étiquettes d'entraînement.
+        """
         self.strategie.entrainer(x_train, t_train)
 
     def prediction(self, x):
-        # Utilisez la stratégie pour la prédiction
+        """
+        Effectue des prédictions à l'aide de la stratégie de classification.
+
+        Parametres:
+        - x (array): Données pour les prédictions.
+
+        Retourne:
+        - array: Prédictions du modèle.
+        """
         if not isinstance(x, (list, np.ndarray, torch.Tensor)):
             x = [x]
 
         return self.strategie.prediction(x)
 
     def erreur(self, t, prediction):
-        # Utilisez la stratégie pour calculer l'erreur
+        """
+        Calcule l'erreur entre les étiquettes réelles et les prédictions.
+
+        Parameters:
+        - t (array): Étiquettes réelles.
+        - prediction (array): Prédictions du modèle.
+
+        Returns:
+        - list: Erreurs du modèle.
+        """
         return self.strategie.erreur(t, prediction)
 
     def afficher_donnees_et_modele(self, x_train, t_train, x_test, t_test):
         """
-        afficher les donnees et le modele
+        Affiche les informations que le modele peut souhaiter afficher et
+        les frontières de décision pour l'ensemble d'entraînement et de test.
 
         x_train, t_train : donnees d'entrainement
         x_test, t_test : donnees de test
@@ -68,18 +105,28 @@ class ClassifieurLineaire:
     def parametres(self):
         """
         Retourne les paramètres du modèle
+        
+        Retourne:
+        - Paramètres du modèle (Dépend du modele de classification).
         """
         return self.strategie.parametres()
 
     def get_hyperparametres(self):
         """
-        Retourne les hyperparamètres du modèle
+        Retourne les hyperparamètres du modèle.
+        Dans l'optique du recherche d'hyperparamètres optimaux
+        
+        Retourne:
+        - Hyperparamètres du modèle.
         """
         return self.strategie.get_hyperparametres()
 
     def set_hyperparametres(self, hyperparametres_list):
         """
-        definit les hyperparamètres du modèle
+        Définit les hyperparamètres du modèle.
+
+        Parametres:
+        - hyperparametres_list (list): Liste des hyperparamètres.
         """
         self.strategie.set_hyperparametres(hyperparametres_list)
 
@@ -169,11 +216,11 @@ class ClassifieurLineaire:
         """
         Évalue le modèle en affichant la matrice de confusion et en renvoyant les métriques de performance.
 
-        Parameters:
+        Parametres:
         - X (array): Données pour l'évaluation.
         - y (array): Étiquettes pour l'évaluation.
 
-        Returns:
+        Retourne:
         - precision (float): Précision pondérée.
         - rappel (float): Rappel pondéré.
         - f1 (float): Score F1 pondéré.

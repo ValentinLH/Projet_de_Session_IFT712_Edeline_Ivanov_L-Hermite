@@ -1,9 +1,6 @@
 from sklearn.linear_model import Perceptron as SKlearnPerceptron
 from .ClassifieurLineaire import StrategieClassification
 import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.calibration import LabelEncoder
-from scipy.interpolate import LinearNDInterpolator
 
 
 class Perceptron(StrategieClassification):
@@ -60,71 +57,16 @@ class Perceptron(StrategieClassification):
         return self.w_0, self.w
 
     def afficher(self, x_train, t_train, x_test, t_test):
-        le = LabelEncoder()
-        t_train_encoded = le.fit_transform(t_train)
-        t_test_encoded = le.transform(t_test)
+        """
+        Methode d'affichage des frontières de décision pour l'ensemble d'entraînement et de test.
+        On ne fait plus rien car elle est remplacer par la méthode générique.
 
-        h = 0.05
-        x_min, x_max = x_train[:, 0].min() - .5, x_train[:, 0].max() + .5
-        y_min, y_max = x_train[:, 1].min() - .5, x_train[:, 1].max() + .5
-        xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-
-        # Utiliser LinearNDInterpolator pour interpoler les données
-        points = np.column_stack((x_train[:, 0], x_train[:, 1]))
-        values = x_train[:, 2:]
-
-        interpolator = LinearNDInterpolator(points, values)
-        grid_xy = np.c_[xx.ravel(), yy.ravel()]
-        grid_dim = interpolator(grid_xy)
-        grid_tot = np.c_[grid_xy, grid_dim]
-        grid_tot[np.isnan(grid_tot)] = 0
-        grid_z = self.perceptron_model.predict(grid_tot)
-
-        Z = le.transform(grid_z)
-        # Remettre les résultats en forme pour le tracé
-        Z = Z.reshape(xx.shape)
-
-        plt.figure(figsize=(14, 8))
-        plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
-        plt.scatter(x_train[:, 0], x_train[:, 1], c=t_train_encoded, edgecolors='k', cmap=plt.cm.Paired)
-        plt.xlim(xx.min(), xx.max())
-        plt.ylim(yy.min(), yy.max())
-        plt.xticks(())
-        plt.yticks(())
-
-        plt.title('Frontières de décision - Ensemble d\'Entraienement')
-        plt.show()
-
-        h = 0.05
-        x_min, x_max = x_test[:, 0].min() - .5, x_test[:, 0].max() + .5
-        y_min, y_max = x_test[:, 1].min() - .5, x_test[:, 1].max() + .5
-        xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-
-        # Utiliser LinearNDInterpolator pour interpoler les données
-        points = np.column_stack((x_test[:, 0], x_test[:, 1]))
-        values = x_test[:, 2:]
-
-        interpolator = LinearNDInterpolator(points, values)
-        grid_xy = np.c_[xx.ravel(), yy.ravel()]
-        grid_dim = interpolator(grid_xy)
-        grid_tot = np.c_[grid_xy, grid_dim]
-        grid_tot[np.isnan(grid_tot)] = 0
-        grid_z = self.perceptron_model.predict(grid_tot)
-
-        Z = le.transform(grid_z)
-        # Remettre les résultats en forme pour le tracé
-        Z = Z.reshape(xx.shape)
-
-        plt.figure(figsize=(14, 8))
-        plt.pcolormesh(xx, yy, Z, cmap=plt.cm.Paired)
-        plt.scatter(x_test[:, 0], x_test[:, 1], c=t_test_encoded, edgecolors='k', cmap=plt.cm.Paired)
-        plt.xlim(xx.min(), xx.max())
-        plt.ylim(yy.min(), yy.max())
-        plt.xticks(())
-        plt.yticks(())
-
-        plt.title('Frontières de décision - Données de test')
-        plt.show()
+        :param x_train: Données d'entraînement.
+        :param t_train: Étiquettes d'entraînement.
+        :param x_test: Données de test.
+        :param t_test: Étiquettes de test.
+        """
+        pass
 
     def get_hyperparametres(self):
         """

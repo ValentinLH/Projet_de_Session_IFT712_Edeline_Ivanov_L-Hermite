@@ -63,9 +63,10 @@ class RandomForest(StrategieClassification):
             'random_state': self.random_state
         }
 
-    def afficher(self, x_train, t_train, x_test, t_test, feature_names=None, class_names=None):
+    def afficher(self, x_entrainement, t_entrainement, x_test, t_test, noms_attributs=None, noms_classes=None):
         """
         Affiche les résultats de classification pour le modèle Random Forest.
+        On peut y voir l'arbre de décisions qui est aussi sauvegarder au format png
 
         :param x_train: Les données d'entraînement.
         :param t_train: Les étiquettes de classe d'entraînement.
@@ -75,33 +76,33 @@ class RandomForest(StrategieClassification):
         :param class_names: Noms des classes (facultatif).
         """
         # Si les noms de caractéristiques ne sont pas fournis, utilisez des noms génériques.
-        if not feature_names:
-            feature_names = [f'Feature {i}' for i in range(x_train.shape[1])]
+        if not noms_attributs:
+            noms_attributs = [f'Attribut {i}' for i in range(x_entrainement.shape[1])]
 
         # Si les noms de classe ne sont pas fournis,
         # utilisez des noms génériques basés sur les étiquettes d'entraînement.
-        if not class_names:
-            class_names = [f'Class {i}' for i in range(len(np.unique(t_train)))]
+        if not noms_classes:
+            noms_classes = [f'Classe {i}' for i in range(len(np.unique(t_entrainement)))]
 
         fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(4, 4), dpi=800)
         tree.plot_tree(self.random_forest_model.estimators_[0],
-                       feature_names=feature_names,
-                       class_names=class_names,
+                       feature_names=noms_attributs,
+                       class_names=noms_classes,
                        filled=True)
-        fig.savefig('rf_individualtree.png')
+        fig.savefig('arbre_de_décision_random_forest.png')
         plt.show()
 
         # Utilisez seulement les deux premières caractéristiques pour l'affichage
-        x_train_subset = x_train[:, :2]
-        x_test_subset = x_test[:, :2]
+        x_entrainement_sous_ensemble = x_entrainement[:, :2]
+        x_test_sous_ensemble = x_test[:, :2]
 
         le = LabelEncoder()
-        t_train_encoded = le.fit_transform(t_train)
+        x_entrainement_encode = le.fit_transform(t_entrainement)
 
         # Affichage des données d'entraînement
         plt.figure(figsize=(12, 5))
         plt.subplot(1, 2, 1)
-        plt.scatter(x_train_subset[:, 0], x_train_subset[:, 1], c=t_train_encoded, cmap=plt.cm.Paired, edgecolor='k',
+        plt.scatter(x_entrainement_sous_ensemble[:, 0], x_entrainement_sous_ensemble[:, 1], c=x_entrainement_encode, cmap=plt.cm.Paired, edgecolor='k',
                     s=20)
         plt.title('Training Data')
 
@@ -109,7 +110,7 @@ class RandomForest(StrategieClassification):
 
         # Affichage des données de test
         plt.subplot(1, 2, 2)
-        plt.scatter(x_test_subset[:, 0], x_test_subset[:, 1], c=t_test_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
+        plt.scatter(x_test_sous_ensemble[:, 0], x_test_sous_ensemble[:, 1], c=t_test_encoded, cmap=plt.cm.Paired, edgecolor='k', s=20)
         plt.title('Testing Data')
 
         # Affichage final
