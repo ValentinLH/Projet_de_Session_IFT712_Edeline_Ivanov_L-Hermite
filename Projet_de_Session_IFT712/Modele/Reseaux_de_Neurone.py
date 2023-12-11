@@ -1,4 +1,3 @@
-import sklearn
 from sklearn.neural_network import MLPClassifier
 from Modele.ClassifieurLineaire import StrategieClassification
 import numpy as np
