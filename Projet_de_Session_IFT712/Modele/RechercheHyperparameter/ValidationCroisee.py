@@ -64,7 +64,7 @@ class ValidationCroisee(StrategyRechercheHyperparameter):
 
                 predictions = modele.prediction(X_Validation)
 
-                if T_Validation is torch.Tensor:
+                if isinstance(T_Validation,torch.Tensor):
                     # Transformation du one hot vector en valeur de classe pour le calcul d'accuracy
                     _, t_valid_pred = torch.max(T_Validation, 1)
                     T_Validation = t_valid_pred.tolist()
