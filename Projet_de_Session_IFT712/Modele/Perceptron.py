@@ -1,9 +1,6 @@
 from sklearn.linear_model import Perceptron as SKlearnPerceptron
 from .ClassifieurLineaire import StrategieClassification
 import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.calibration import LabelEncoder
-from scipy.interpolate import LinearNDInterpolator
 
 
 class Perceptron(StrategieClassification):

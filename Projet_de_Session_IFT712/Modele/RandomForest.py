@@ -66,6 +66,7 @@ class RandomForest(StrategieClassification):
     def afficher(self, x_train, t_train, x_test, t_test, feature_names=None, class_names=None):
         """
         Affiche les résultats de classification pour le modèle Random Forest.
+        On peut y voir l'arbre de décisions qui est aussi sauvegarder au format png
 
         :param x_train: Les données d'entraînement.
         :param t_train: Les étiquettes de classe d'entraînement.
@@ -88,7 +89,7 @@ class RandomForest(StrategieClassification):
                        feature_names=feature_names,
                        class_names=class_names,
                        filled=True)
-        fig.savefig('rf_individualtree.png')
+        fig.savefig('arbre_de_décision_random_forest.png')
         plt.show()
 
         # Utilisez seulement les deux premières caractéristiques pour l'affichage

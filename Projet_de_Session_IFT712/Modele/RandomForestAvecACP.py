@@ -6,10 +6,18 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
 
+"""
+Classe de RandomForestAvecACP
+Cette classe fonctionne du point de vue technique
+Mais elle part d'une idée de faire apprendre le RandomForest uniquement sur le résultat de l'ACP
+ce qui ce trouve ne pas etre concluant
+
+"""
 class RandomForestAvecACP(StrategieClassification):
     def __init__(self, n_estimators=100, max_depth=None, random_state=None, n_components=2):
         """
         Stratégie de classification utilisant un modèle Random Forest après une ACP.
+        Cette classe est expérimentale.
 
         :param n_estimators: Le nombre d'arbres dans le Random Forest.
         :param max_depth: La profondeur maximale des arbres. (Facultatif)
